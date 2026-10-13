@@ -1,0 +1,223 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Installer les dépendances ONG BK",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"install"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Copier les photos du site",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"copy-assets"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Vérifier les types ONG BK",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"lint"
+			],
+			"isBackground": false,
+			"problemMatcher": [
+				"$tsc"
+			]
+		},
+		{
+			"label": "Construire le site ONG BK",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"build"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Démarrer le site ONG BK",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"dev",
+				"--",
+				"--port",
+				"3001"
+			],
+			"isBackground": true,
+			"problemMatcher": [
+				{
+					"base": "$tsc-watch",
+					"background": {
+						"activeOnStart": true,
+						"beginsPattern": ".*",
+						"endsPattern": "[Rr]eady in"
+					}
+				}
+			]
+		},
+		{
+			"label": "Démarrer ONG BK en développement",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"dev",
+				"--",
+				"--port",
+				"3001"
+			],
+			"isBackground": true,
+			"problemMatcher": [
+				{
+					"pattern": {
+						"regexp": "^(.*)$",
+						"file": 1,
+						"location": 2,
+						"message": 3
+					},
+					"background": {
+						"activeOnStart": true,
+						"beginsPattern": ".*",
+						"endsPattern": "Ready in"
+					}
+				}
+			]
+		},
+		{
+			"label": "Inspecter les ports 3000 et 3001",
+			"type": "shell",
+			"command": "cmd.exe",
+			"args": [
+				"/c",
+				"netstat -ano | findstr LISTENING | findstr \":3000\" & netstat -ano | findstr LISTENING | findstr \":3001\""
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Arrêter tous les serveurs web",
+			"type": "shell",
+			"command": "cmd.exe",
+			"args": [
+				"/c",
+				"for /f \"tokens=5\" %P in ('netstat -ano ^| findstr LISTENING ^| findstr \":3000\"') do taskkill /F /PID %P & for /f \"tokens=5\" %P in ('netstat -ano ^| findstr LISTENING ^| findstr \":3001\"') do taskkill /F /PID %P & timeout /t 2 /nobreak >nul & netstat -ano | findstr LISTENING | findstr \":3000\" & netstat -ano | findstr LISTENING | findstr \":3001\""
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Lister les ports web actifs",
+			"type": "shell",
+			"command": "netstat",
+			"args": [
+				"-ano"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Arrêter les serveurs 3000 et 3001",
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"-e",
+				"const {execFileSync}=require('node:child_process');const ports=[3000,3001];let rows=[];try{rows=execFileSync('netstat',['-ano'],{encoding:'utf8'}).split(/\\r?\\n/).filter(line=>/LISTENING/i.test(line));}catch(error){console.error('Impossible de lire les connexions Windows:',error.message);process.exit(1);}const pids=new Set();for(const line of rows){const match=line.trim().match(/^TCP\\s+\\S+:(\\d+)\\s+\\S+\\s+LISTENING\\s+(\\d+)$/i);if(match&&ports.includes(Number(match[1])))pids.add(Number(match[2]));}for(const pid of pids){try{console.log(`Arrêt du processus PID ${pid}`);execFileSync('taskkill',['/F','/PID',String(pid)],{stdio:'inherit'});}catch(error){console.error(`Échec de l’arrêt du PID ${pid}:`,error.message);process.exitCode=1;}}let remaining=[];try{remaining=execFileSync('netstat',['-ano'],{encoding:'utf8'}).split(/\\r?\\n/).filter(line=>/LISTENING/i.test(line)&&ports.some(port=>new RegExp(`:\\\\b${port}\\\\s`).test(line)));}catch(error){console.error('Impossible de vérifier les ports:',error.message);process.exit(1);}if(remaining.length){console.error('Ports toujours occupés:',remaining.join('\\n'));process.exitCode=1;}else{console.log('Vérification terminée : aucun processus à l’écoute sur 3000 ou 3001.');}"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Arrêter les ports 3000 et 3001",
+			"type": "shell",
+			"command": "taskkill",
+			"args": [
+				"/F",
+				"/FI",
+				"IMAGENAME eq node.exe"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Vérifier ports 3000 et 3001",
+			"type": "shell",
+			"command": "netstat",
+			"args": [
+				"-ano"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Vérifier les deux ports",
+			"type": "shell",
+			"command": "cmd.exe",
+			"args": [
+				"/c",
+				"netstat -ano | findstr LISTENING | findstr \":3000\" & netstat -ano | findstr LISTENING | findstr \":3001\""
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Vérifier compilation disponible",
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"-e",
+				"const fs=require('node:fs');const path=require('node:path');const id=path.join('.next','BUILD_ID');if(fs.existsSync(id)){console.log('Build disponible:',fs.readFileSync(id,'utf8').trim())}else{console.log('Build de production absent');process.exitCode=1}"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Démarrer ONG BK sur 3000",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"start"
+			],
+			"isBackground": true,
+			"problemMatcher": [
+				{
+					"pattern": {
+						"regexp": "^(.*)$",
+						"file": 1,
+						"location": 2,
+						"message": 3
+					},
+					"background": {
+						"activeOnStart": true,
+						"beginsPattern": ".*",
+						"endsPattern": "Ready in"
+					}
+				}
+			]
+		},
+		{
+			"label": "Formater le schéma Prisma",
+			"type": "shell",
+			"command": "npx",
+			"args": [
+				"prisma",
+				"format"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		}
+	]
+}
