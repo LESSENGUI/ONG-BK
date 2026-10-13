@@ -24,6 +24,21 @@ export const loginSchema = z.object({
     .refine((value) => Buffer.byteLength(value, "utf8") <= 72),
 }).strict();
 
+export const initialAdminSchema = z
+  .object({
+    setupSecret: z.string().min(32).max(256),
+    email,
+    firstName: z.string().trim().min(1).max(100),
+    lastName: z.string().trim().min(1).max(100),
+    password,
+    confirmPassword: z.string(),
+  })
+  .strict()
+  .refine((value) => value.password === value.confirmPassword, {
+    path: ["confirmPassword"],
+    message: "Les mots de passe ne correspondent pas.",
+  });
+
 export const passwordResetRequestSchema = z.object({ email }).strict();
 
 export const passwordResetSchema = z

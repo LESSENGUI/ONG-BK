@@ -45,10 +45,11 @@
    Copy-Item .env.example .env
    ```
 
-4. Modifier `.env` localement. Remplacer `DATABASE_URL` par l’URL réelle de PostgreSQL, définir `APP_URL`, et configurer les paramètres SMTP du fournisseur institutionnel :
+4. Modifier `.env` localement. Par défaut, gardez `DATABASE_URL` et `DIRECT_URL` identiques ; si vous utilisez un pooler externe (par exemple Supabase), mettez `DATABASE_URL` sur le pooler transactionnel (port `6543`) et `DIRECT_URL` sur le pooler session (port `5432`) pour les migrations. Utilisez un mot de passe local unique, ne le versionnez jamais dans Git et encodez les caractères spéciaux dans l’URL. Définir `APP_URL` et configurer les paramètres SMTP du fournisseur institutionnel :
 
    ```dotenv
-   DATABASE_URL="postgresql://UTILISATEUR:MOT_DE_PASSE@HOTE:5432/ongbk?schema=public"
+   DATABASE_URL="postgresql://ongbk_app:motdepasse-local@localhost:5432/ongbk?schema=public"
+   DIRECT_URL="postgresql://ongbk_app:motdepasse-local@localhost:5432/ongbk?schema=public"
    APP_URL="http://localhost:3000"
    SMTP_HOST="smtp.votre-fournisseur"
    SMTP_PORT="587"
@@ -57,10 +58,8 @@
    SMTP_PASSWORD="secret-fourni-par-votre-administrateur"
    SMTP_FROM="ONG-BK <adresse-expediteur-vérifiée>"
    AUTH_SESSION_HOURS="8"
+   
    ```
-
-   Encoder les caractères spéciaux du nom d’utilisateur ou du mot de passe dans l’URL PostgreSQL. Ne préfixez aucune variable sensible par `NEXT_PUBLIC_`. `.env` est ignoré par Git.
-
 5. Appliquer le schéma et les migrations, puis attribuer les rôles initiaux :
 
    ```powershell
@@ -74,7 +73,25 @@
 
 ## Premier compte administrateur
 
-Le script refuse de s’exécuter si un utilisateur existe déjà. Il crée le rôle `SYSTEM_ADMIN`, qui peut créer des comptes opérationnels, attribuer les rôles disponibles et affecter des tâches, sans pouvoir d’approbation financière ou institutionnelle. Le rôle `TECHNICAL_ADMIN` n’est pas un administrateur principal.
+Sur `/admin/login`, le lien « Créer le premier compte administrateur » apparaît tant qu’aucun compte utilisateur n’existe. La route `/admin/setup` permet alors de créer le compte `SYSTEM_ADMIN` avec vos propres identifiants et ouvre une session après la création. La transaction sérialise les créations concurrentes ; dès qu’un utilisateur existe, l’inscription initiale est fermée. Aucun compte ni mot de passe par défaut n’est créé. Le rôle `SYSTEM_ADMIN` peut créer les comptes opérationnels et affecter des tâches, sans pouvoir d’approbation financière ou institutionnelle ; le rôle `TECHNICAL_ADMIN` n’est pas un administrateur principal.
+
+Avant d’ouvrir le site aux utilisateurs, définissez `ADMIN_SETUP_SECRET` dans `.env` avec une valeur aléatoire privée d’au moins 32 caractères. Dans PowerShell, générez-la localement :
+
+```powershell
+$bytes = New-Object byte[] 32
+$rng = [System.Security.Cryptography.RandomNumberGenerator]::Create()
+try {
+  $rng.GetBytes($bytes)
+  [Convert]::ToBase64String($bytes)
+}
+finally {
+  $rng.Dispose()
+}
+```
+
+Copiez la valeur affichée dans `ADMIN_SETUP_SECRET` de `.env`, redémarrez l’application, ouvrez `/admin/setup` et saisissez le même code avec le nom, l’adresse e-mail et un mot de passe fort. Ne transmettez pas le code ou le mot de passe dans le chat et ne les ajoutez jamais au dépôt. Le formulaire exige également une requête de même origine. Si la base de données contient déjà un compte, cette création initiale ne peut plus être utilisée.
+
+Le processus CLI ci-dessous reste disponible pour une création opérée directement sur le serveur. Il refuse également de s’exécuter si un utilisateur existe déjà.
 
 Dans PowerShell, demander les informations sans inscrire le mot de passe dans l’historique de commandes :
 

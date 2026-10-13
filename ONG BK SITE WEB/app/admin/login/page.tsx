@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { LockKeyhole } from "lucide-react";
 import { LoginForm } from "@/app/admin/login/login-form";
 import { getCurrentUser } from "@/lib/auth";
+import { hasAnyUser } from "@/lib/admin-setup";
 
 export const dynamic = "force-dynamic";
 
@@ -13,6 +14,7 @@ export default async function AdminLoginPage({
 }) {
   if (await getCurrentUser()) redirect("/admin/dashboard");
   const { reset } = await searchParams;
+  const showInitialSetup = !(await hasAnyUser());
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#f6f4f1] px-5 py-12">
@@ -35,6 +37,14 @@ export default async function AdminLoginPage({
         >
           Mot de passe oublié ?
         </Link>
+        {showInitialSetup && (
+          <Link
+            className="mt-4 block text-center text-sm font-semibold text-ink/65 hover:text-forest hover:underline"
+            href="/admin/setup"
+          >
+            Créer le premier compte administrateur
+          </Link>
+        )}
       </section>
     </main>
   );

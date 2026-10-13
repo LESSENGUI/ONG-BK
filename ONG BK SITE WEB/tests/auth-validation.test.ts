@@ -1,10 +1,38 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
+  initialAdminSchema,
   loginSchema,
   passwordResetSchema,
   systemSettingsSchema,
 } from "../lib/auth-validation";
+
+test("initial administrator setup requires strong matching credentials and a setup secret", () => {
+  const valid = {
+    setupSecret: "s".repeat(43),
+    email: "  ADMIN@ONG-BK.ORG ",
+    firstName: "Amina",
+    lastName: "Kouila",
+    password: "long-secure-password",
+    confirmPassword: "long-secure-password",
+  };
+  assert.deepEqual(initialAdminSchema.parse(valid), {
+    ...valid,
+    email: "admin@ong-bk.org",
+  });
+  assert.equal(
+    initialAdminSchema.safeParse({ ...valid, setupSecret: "short" }).success,
+    false,
+  );
+  assert.equal(
+    initialAdminSchema.safeParse({ ...valid, confirmPassword: "different-password" }).success,
+    false,
+  );
+  assert.equal(
+    initialAdminSchema.safeParse({ ...valid, password: "short", confirmPassword: "short" }).success,
+    false,
+  );
+});
 
 test("login input normalizes email and rejects extra fields", () => {
   assert.deepEqual(
