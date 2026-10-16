@@ -16,7 +16,13 @@ export type HomeActivity = {
   coverImage: string;
 };
 
-export function HomeActivitiesCarousel({ activities }: { activities: HomeActivity[] }) {
+export function HomeActivitiesCarousel({
+  activities,
+  unavailable = false,
+}: {
+  activities: HomeActivity[];
+  unavailable?: boolean;
+}) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [paused, setPaused] = useState(false);
   const scroll = (direction: -1 | 1) => {
@@ -38,7 +44,11 @@ export function HomeActivitiesCarousel({ activities }: { activities: HomeActivit
     return (
       <div className="mt-9 rounded-3xl border border-dashed border-ink/15 bg-[#fbfaf7] px-6 py-10 text-center sm:px-10">
         <p className="font-display text-lg font-bold text-ink">Les comptes rendus d’activités seront présentés ici.</p>
-        <p className="mx-auto mt-2 max-w-[570px] text-sm leading-6 text-ink/60">Aucune activité réalisée n’est actuellement publiée. Les activités apparaîtront dans ce carrousel lorsqu’un compte rendu public aura été validé et publié.</p>
+        <p className="mx-auto mt-2 max-w-[570px] text-sm leading-6 text-ink/60">
+          {unavailable
+            ? "Les comptes rendus d’activités sont momentanément indisponibles. Veuillez réessayer plus tard."
+            : "Aucune activité réalisée n’est actuellement publiée. Les activités apparaîtront dans ce carrousel lorsqu’un compte rendu public aura été validé et publié."}
+        </p>
         <Link className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-forest" href="/actions">Découvrir nos domaines d’action <ArrowRight size={15} /></Link>
       </div>
     );

@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { ArrowDownToLine, ArrowRight, CalendarDays, FileText, Search } from "lucide-react";
-import type { EqualityArticle } from "@/lib/public-articles";
+import { formationIaArticle, type EqualityArticle } from "@/lib/public-articles";
 
 type PublicationItem = {
   slug: string;
@@ -53,17 +53,29 @@ export function Newsroom({
   const filtered = useMemo(() => {
     const items = [
       {
+        slug: formationIaArticle.slug,
+        type: "Actualité",
+        title: formationIaArticle.title,
+        summary: formationIaArticle.summary,
+        category: formationIaArticle.category,
+        publishedAt: null,
+        sourceLabel: "Source : ADIAC-CONGO",
+        image: formationIaArticle.images[0],
+      },
+      {
         slug: equalityArticle.slug,
         type: "Article",
         title: equalityArticle.title,
         summary: equalityArticle.summary,
         category: equalityArticle.category,
         publishedAt: equalityArticle.publishedAt,
+        sourceLabel: null,
         image: equalityArticle.image,
       },
       ...publications.map((item) => ({
         ...item,
         type: kindOf(item.type),
+        sourceLabel: null,
         image: item.coverMedia ? `/api/media/${item.coverMedia.id}` : "/images/action-communaute.jpg",
       })),
     ];
@@ -131,7 +143,11 @@ export function Newsroom({
                 <h3 className="mt-3 font-display text-xl font-bold leading-snug text-ink sm:text-2xl">{item.title}</h3>
                 <p className="mt-3 line-clamp-3 text-sm leading-6 text-ink/65">{item.summary}</p>
                 <div className="mt-auto flex flex-wrap items-center justify-between gap-3 pt-6 text-xs text-ink/55">
-                  <span className="inline-flex items-center gap-1.5"><CalendarDays size={14} />{formatDate(item.publishedAt)}</span>
+                  {item.sourceLabel ? (
+                    <span>{item.sourceLabel}</span>
+                  ) : (
+                    <span className="inline-flex items-center gap-1.5"><CalendarDays size={14} />{formatDate(item.publishedAt)}</span>
+                  )}
                   <span className="inline-flex items-center gap-1.5 font-bold text-forest">Lire le détail <ArrowRight size={15} /></span>
                 </div>
               </div>

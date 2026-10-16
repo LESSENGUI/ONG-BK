@@ -1,8 +1,5 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "motion/react";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -32,12 +29,7 @@ export function PageHero({
       <Image alt="" className="object-cover" fill priority sizes="100vw" src={image} />
       <div className="absolute inset-0 bg-gradient-to-r from-[#10243d]/90 via-[#10243d]/65 to-[#10243d]/15" />
       <div className="absolute inset-0 bg-gradient-to-t from-[#10243d]/35 to-transparent" />
-      <motion.div
-        animate={{ opacity: 1, y: 0 }}
-        className="relative z-10 mx-auto w-full max-w-[1320px] px-6 pb-12 pt-24 sm:px-10 sm:pb-16 lg:px-12"
-        initial={{ opacity: 0, y: 24 }}
-        transition={{ duration: 0.7, ease: "easeOut" }}
-      >
+      <div className="page-hero-content relative z-10 mx-auto w-full max-w-[1320px] px-6 pb-12 pt-24 sm:px-10 sm:pb-16 lg:px-12">
         <p className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-[#f3ce6e]">
           <span className="h-px w-7 bg-[#f3ce6e]" />{eyebrow}
         </p>
@@ -47,7 +39,7 @@ export function PageHero({
           <Button asChild><Link href={primaryHref}>{primaryLabel}<ArrowRight size={15} /></Link></Button>
           <Button asChild variant="outline" className="border-white/40 bg-white/10 text-white hover:bg-white/20"><Link href={secondaryHref}>{secondaryLabel}</Link></Button>
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 }

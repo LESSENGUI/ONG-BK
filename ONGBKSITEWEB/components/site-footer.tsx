@@ -63,12 +63,12 @@ export function SiteFooter() {
   if (pathname.startsWith("/admin")) return null;
 
   return (
-    <footer className="relative isolate overflow-hidden bg-[#123c5a] text-white" id="contact">
+    <footer className="relative isolate overflow-hidden bg-[linear-gradient(135deg,#0B5A9B_0%,#123c5a_45%,#0B5A9B_100%)] text-white" id="contact">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-y-0 right-[-8rem] w-[min(72vw,700px)] bg-[url('/images/africa-map.svg')] bg-contain bg-right bg-no-repeat opacity-[0.09] sm:right-[-4rem] sm:w-[58vw]"
       />
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#123c5a] via-[#123c5a]/95 to-transparent" />
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(11,90,155,0.96),rgba(11,90,155,0.82),transparent)]" />
 
       <div className="relative mx-auto grid max-w-[1320px] gap-10 px-6 py-14 sm:px-10 sm:py-16 lg:gap-8 lg:px-12 xl:grid-cols-[1.35fr_0.8fr_0.9fr_0.9fr_1fr] xl:gap-8 xl:py-[4.5rem]">
         <div className="max-w-[330px]">

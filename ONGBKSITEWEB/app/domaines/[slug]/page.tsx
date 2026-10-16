@@ -83,6 +83,47 @@ export default async function DomainDetailPage({ params }: DomainPageProps) {
         </aside>
       </section>
 
+      <section className="bg-[var(--bk-fond)] py-14 sm:py-18">
+        <div className="mx-auto grid max-w-[1180px] gap-10 px-5 sm:px-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16 lg:px-12">
+          <div>
+            <p className="section-eyebrow">Actions envisagées</p>
+            <h2 className="section-title mt-3">Comment cet engagement peut se traduire.</h2>
+            <p className="mt-4 text-sm leading-7 text-ink/65">
+              Ces pistes complètent les axes du domaine. Elles décrivent des moyens d’action
+              envisagés et ne constituent pas une déclaration de réalisations déjà effectuées.
+            </p>
+            <ul className="mt-6 grid gap-3">
+              {domain.contributions.map((contribution) => (
+                <li className="flex gap-3 rounded-2xl border border-[rgba(59,74,90,0.08)] bg-white p-4 text-sm leading-6 text-ink/70 shadow-[0_8px_24px_rgba(11,90,155,0.04)]" key={contribution}>
+                  <CheckCircle2 aria-hidden="true" className="mt-0.5 shrink-0 text-[var(--bk-ciel)]" size={17} />
+                  {contribution}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <p className="section-eyebrow">Objectifs de développement durable</p>
+            <h2 className="mt-3 font-display text-2xl font-bold leading-tight text-[var(--bk-marine)]">Une contribution aux ODD adaptée au domaine.</h2>
+            <p className="mt-3 text-sm leading-6 text-ink/60">
+              Les ODD ci-dessous indiquent les objectifs auxquels les actions de ce domaine peuvent contribuer.
+            </p>
+            <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+              {domain.sustainableGoals.map((goal) => (
+                <article className="flex gap-3 rounded-2xl border border-[rgba(59,74,90,0.08)] bg-white p-4" key={goal.number}>
+                  <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-[rgba(25,167,230,0.1)] font-display text-sm font-extrabold text-[var(--bk-marine)]">
+                    {String(goal.number).padStart(2, "0")}
+                  </span>
+                  <div>
+                    <h3 className="text-sm font-bold text-[var(--bk-marine)]">ODD {goal.number} · {goal.title}</h3>
+                    <p className="mt-1 text-xs leading-5 text-ink/65">{goal.relevance}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="bg-[#f8f7f4] py-16 sm:py-20">
         <div className="mx-auto max-w-[1180px] px-5 sm:px-8 lg:px-12">
           <div className="max-w-[670px]">

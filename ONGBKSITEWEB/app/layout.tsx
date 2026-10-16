@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { ScrollProgress } from "@/components/scroll-progress";
+import { ScrollReveal } from "@/components/scroll-reveal";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 
@@ -16,7 +18,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr">
-      <body className="antialiased">
+      <body className="antialiased bg-[var(--bk-fond)] text-[var(--bk-texte)]">
+        <ScrollProgress />
+        <ScrollReveal />
         <SiteHeader />
         {children}
         <SiteFooter />

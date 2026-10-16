@@ -30,6 +30,8 @@ export type Domain = {
   axes: DomainAxis[];
   activities: string[];
   impactIndicators: string[];
+  contributions: string[];
+  sustainableGoals: { number: number; title: string; relevance: string }[];
   icon: LucideIcon;
   coverImage: string;
   published: boolean;
@@ -63,6 +65,16 @@ export const domains: Domain[] = [
     ],
     activities: ["Ateliers éducatifs et de lecture", "Temps d’accompagnement scolaire", "Rencontres d’échange avec les familles", "Activités d’expression et de découverte"],
     impactIndicators: ["Participation et assiduité aux activités", "Progression des compétences ciblées", "Retours des jeunes et des familles"],
+    contributions: [
+      "Mettre en place des programmes d’alphabétisation et de rattrapage scolaire pour les enfants déscolarisés et les adultes analphabètes.",
+      "Collaborer avec les écoles locales pour améliorer les infrastructures éducatives et l’accès aux fournitures scolaires.",
+      "Sensibiliser les communautés à l’importance de l’éducation, en particulier celle des filles.",
+    ],
+    sustainableGoals: [
+      { number: 4, title: "Éducation de qualité", relevance: "Contribuer à l’accès à des apprentissages inclusifs et à des parcours éducatifs continus." },
+      { number: 5, title: "Égalité entre les sexes", relevance: "Encourager la sensibilisation et la participation des filles à l’éducation." },
+      { number: 10, title: "Inégalités réduites", relevance: "Porter une attention particulière aux obstacles rencontrés par les publics vulnérables." },
+    ],
     icon: BookOpen,
     coverImage: "/images/action-education.jpg",
     published: true,
@@ -94,6 +106,16 @@ export const domains: Domain[] = [
     ],
     activities: ["Ateliers pratiques", "Séances d’initiation numérique", "Accompagnement à l’orientation professionnelle", "Rencontres métiers et partage d’expérience"],
     impactIndicators: ["Compétences acquises ou consolidées", "Assiduité et achèvement des parcours", "Retours des participants sur leur projet professionnel"],
+    contributions: [
+      "Créer et soutenir des centres de formation professionnelle.",
+      "Organiser des formations techniques adaptées aux besoins du marché local.",
+      "Proposer des modules de formation sur le changement de paradigme dans les écoles professionnelles et les universités.",
+    ],
+    sustainableGoals: [
+      { number: 4, title: "Éducation de qualité", relevance: "Développer les possibilités de formation et d’apprentissage tout au long de la vie." },
+      { number: 8, title: "Travail décent et croissance économique", relevance: "Renforcer les compétences utiles à l’insertion professionnelle et à l’initiative économique." },
+      { number: 10, title: "Inégalités réduites", relevance: "Favoriser l’accès à la formation des personnes dont les possibilités sont limitées." },
+    ],
     icon: BriefcaseBusiness,
     coverImage: "/images/action-ateliers.jpg",
     published: true,
@@ -125,6 +147,17 @@ export const domains: Domain[] = [
     ],
     activities: ["Ateliers de créativité et de formulation d’idées", "Initiation à la gestion de projet", "Échanges entre porteurs d’initiatives", "Accompagnement-conseil selon les besoins"],
     impactIndicators: ["Projets clarifiés et étapes définies", "Compétences de gestion développées", "Progression déclarée par les participants"],
+    contributions: [
+      "Promouvoir l’entrepreneuriat local et la création d’emplois, notamment pour les jeunes et les femmes.",
+      "Faciliter l’accès aux microcrédits et aux programmes de financement avec les organismes partenaires.",
+      "Former les acteurs locaux à la gestion de projets et à la mobilisation des ressources.",
+    ],
+    sustainableGoals: [
+      { number: 1, title: "Pas de pauvreté", relevance: "Soutenir des initiatives qui renforcent l’autonomie économique des personnes vulnérables." },
+      { number: 5, title: "Égalité entre les sexes", relevance: "Encourager l’autonomisation économique des femmes et des jeunes filles." },
+      { number: 8, title: "Travail décent et croissance économique", relevance: "Accompagner les compétences, l’entrepreneuriat local et la création d’activités." },
+      { number: 9, title: "Industrie, innovation et infrastructure", relevance: "Stimuler les solutions et initiatives entrepreneuriales adaptées aux besoins du territoire." },
+    ],
     icon: Sparkles,
     coverImage: "/images/action-communaute.jpg",
     published: true,
@@ -156,6 +189,17 @@ export const domains: Domain[] = [
     ],
     activities: ["Rencontres et événements culturels", "Ateliers d’expression artistique", "Campagnes de sensibilisation", "Initiatives communautaires pour le cadre de vie"],
     impactIndicators: ["Participation aux activités et diversité des publics", "Connaissances partagées ou renforcées", "Initiatives communautaires suivies"],
+    contributions: [
+      "Organiser des activités socioculturelles et des rencontres entre générations.",
+      "Sensibiliser les communautés à l’égalité des genres et à la protection de l’environnement.",
+      "Encourager des projets verts communautaires, notamment le recyclage et l’agroforesterie.",
+    ],
+    sustainableGoals: [
+      { number: 4, title: "Éducation de qualité", relevance: "Valoriser l’apprentissage, les savoirs locaux et la transmission entre générations." },
+      { number: 11, title: "Villes et communautés durables", relevance: "Renforcer la participation et la qualité de vie dans les communautés." },
+      { number: 12, title: "Consommation et production responsables", relevance: "Sensibiliser à des pratiques locales responsables et à la réduction des déchets." },
+      { number: 15, title: "Vie terrestre", relevance: "Encourager la connaissance et la préservation des milieux terrestres." },
+    ],
     icon: Palette,
     coverImage: "/images/action-evenement.jpg",
     published: true,
@@ -187,6 +231,16 @@ export const domains: Domain[] = [
     ],
     activities: ["Séances d’information et d’échange", "Campagnes de sensibilisation", "Ateliers de promotion du bien-être", "Orientation vers les services compétents"],
     impactIndicators: ["Participation et compréhension des messages", "Questions et besoins remontés par les participants", "Orientations vers les ressources compétentes, si documentées"],
+    contributions: [
+      "Organiser des campagnes de sensibilisation sur la santé publique et l’égalité des genres.",
+      "Soutenir des projets communautaires liés aux centres de santé et à l’accès à l’information.",
+      "Orienter les personnes vers les services et professionnels compétents, sans s’y substituer.",
+    ],
+    sustainableGoals: [
+      { number: 3, title: "Bonne santé et bien-être", relevance: "Promouvoir la prévention, l’information fiable et l’orientation vers les ressources de santé." },
+      { number: 5, title: "Égalité entre les sexes", relevance: "Intégrer l’égalité des genres aux campagnes et activités communautaires." },
+      { number: 10, title: "Inégalités réduites", relevance: "Rendre l’information et les activités de sensibilisation accessibles à différents publics." },
+    ],
     icon: HeartPulse,
     coverImage: "/images/action-solidarite.jpg",
     published: true,
@@ -218,6 +272,17 @@ export const domains: Domain[] = [
     ],
     activities: ["Ateliers de sensibilisation écologique", "Journées communautaires autour du cadre de vie", "Échanges sur la gestion des ressources", "Conception participative d’initiatives locales"],
     impactIndicators: ["Participation aux activités et actions de sensibilisation", "Pratiques ou connaissances suivies dans le temps", "Initiatives locales documentées"],
+    contributions: [
+      "Sensibiliser au respect de l’environnement et aux pratiques agricoles durables.",
+      "Encourager des projets verts communautaires, comme le recyclage et l’agroforesterie.",
+      "Collaborer avec les collectivités, les ONG et les organismes nationaux et internationaux.",
+    ],
+    sustainableGoals: [
+      { number: 12, title: "Consommation et production responsables", relevance: "Encourager la réduction des déchets, le recyclage et une gestion plus responsable des ressources." },
+      { number: 13, title: "Lutte contre les changements climatiques", relevance: "Renforcer la sensibilisation et la capacité des communautés à agir face aux défis environnementaux." },
+      { number: 15, title: "Vie terrestre", relevance: "Promouvoir la protection des écosystèmes et les pratiques respectueuses des terres." },
+      { number: 17, title: "Partenariats pour la réalisation des objectifs", relevance: "Faire progresser les initiatives grâce à la coopération entre acteurs locaux et partenaires." },
+    ],
     icon: Leaf,
     coverImage: "/images/action-communaute.jpg",
     published: true,

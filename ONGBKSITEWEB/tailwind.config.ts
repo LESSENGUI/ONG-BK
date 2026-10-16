@@ -5,11 +5,15 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ink: "#172d4e",
-        forest: "#155b48",
-        leaf: "#4e9c76",
-        sun: "#edbd46",
-        paper: "#f8f7f2",
+        ink: "#3B4A5A",
+        forest: "#0B5A9B",
+        leaf: "#19A7E6",
+        sun: "#F2B233",
+        paper: "#F7F7F7",
+        ciel: "#19A7E6",
+        rose: "#E8195F",
+        blue: "#3FA0DC",
+        marine: "#0B5A9B",
       },
       fontFamily: {
         sans: ["var(--font-body)", "sans-serif"],

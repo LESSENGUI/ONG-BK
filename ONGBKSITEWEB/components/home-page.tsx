@@ -1,8 +1,5 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "motion/react";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -17,69 +14,95 @@ import { publishedDomains } from "@/lib/domains";
 import { HomeHeroCarousel } from "@/components/home-hero-carousel";
 import { HomeActivitiesCarousel, type HomeActivity } from "@/components/home-activities-carousel";
 
-export function HomePage({ activities }: { activities: HomeActivity[] }) {
+export const impactCards = [
+  {
+    title: "Apprendre et réussir",
+    figure: "2 300",
+    label: "enfants scolarisés",
+    details: ["5 000 kits scolaires distribués", "1 000 personnes sensibilisées aux droits de l’enfant", "600 heures de soutien scolaire", "80 % de réussite aux examens des élèves soutenus"],
+  },
+  {
+    title: "Se former et entreprendre",
+    figure: "800",
+    label: "jeunes formés professionnellement",
+    details: ["120 microentreprises accompagnées", "300 femmes soutenues dans leur autonomie économique"],
+  },
+  {
+    title: "Renforcer la solidarité",
+    figure: "10 000",
+    label: "bénéficiaires directs en 2024",
+    details: ["3 000 repas distribués", "200 familles accompagnées", "150 enfants orphelins soutenus"],
+  },
+  {
+    title: "Agir pour le bien-être",
+    figure: "400",
+    label: "consultations médicales gratuites",
+    details: ["15 campagnes de sensibilisation", "30 événements communautaires"],
+  },
+  {
+    title: "Faire vivre la culture et l’environnement",
+    figure: "50",
+    label: "ateliers culturels organisés",
+    details: ["500 arbres plantés dans le cadre des actions environnementales"],
+  },
+  {
+    title: "Mobiliser les communautés",
+    figure: "20",
+    label: "partenariats locaux et internationaux",
+    details: ["100 bénévoles mobilisés", "250 jeunes engagés dans le volontariat", "90 % de satisfaction des bénéficiaires"],
+  },
+];
+
+export function HomePage({
+  activities,
+  activitiesUnavailable = false,
+}: {
+  activities: HomeActivity[];
+  activitiesUnavailable?: boolean;
+}) {
   return (
     <main>
-      <section className="hero-map relative isolate overflow-hidden bg-[#f6f4f1]">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_13%_81%,rgba(26,90,72,0.08),transparent_24%),radial-gradient(circle_at_78%_32%,rgba(233,186,72,0.12),transparent_18%)]" />
-        <div className="relative mx-auto grid min-h-[730px] max-w-[1440px] items-center gap-8 px-6 py-12 sm:px-9 lg:min-h-[760px] lg:grid-cols-[0.86fr_1.14fr] lg:px-12 lg:py-16">
-          <motion.div
-            animate={{ opacity: 1, y: 0 }}
-            className="relative z-10 max-w-[620px] pb-7 pt-4 lg:pb-16"
-            initial={{ opacity: 0, y: 18 }}
-            transition={{ duration: 0.65, ease: "easeOut" }}
-          >
-            <p className="mb-6 inline-flex items-center gap-2 rounded-full border border-ink/10 bg-white/80 px-3.5 py-2 text-[10px] font-bold uppercase tracking-[0.16em] text-ink/70">
-              <span className="size-1.5 rounded-full bg-[#3eb7a3]" /> Organisation non gouvernementale
-            </p>
-            <h1 className="home-slogan text-balance font-display text-[clamp(2.9rem,4.3vw,5rem)] font-extrabold leading-[1.12] tracking-[-0.06em] text-ink">
-              <motion.span
-                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                className="block"
-                initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
-                transition={{ duration: 0.7, delay: 0.12, ease: "easeOut" }}
-              >
-                Donnons de la
-              </motion.span>
-              <motion.span
-                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                className="home-slogan-accent block"
-                initial={{ opacity: 0, y: 34, filter: "blur(12px)" }}
-                transition={{ duration: 0.8, delay: 0.25, ease: "easeOut" }}
-              >
-                joie à la Jeunesse.
-              </motion.span>
-            </h1>
-            <p className="mt-6 max-w-[500px] text-[15px] leading-7 text-ink/65 sm:text-[17px] sm:leading-8">
-              Nous croyons au potentiel de chaque personne. Aux côtés des communautés, ONG BK agit pour ouvrir des chemins vers un avenir plus juste et plus solidaire.
-            </p>
-            <div className="mt-8 flex flex-wrap items-center gap-3">
-              <Button asChild className="bg-[#f1c966] text-ink shadow-sm hover:-translate-y-0.5 hover:bg-[#e4b64a]" size="lg"><Link href="#actions">Découvrir nos actions <ArrowRight size={16} /></Link></Button>
-              <Button asChild size="lg" variant="outline"><Link href="/adhesion">Je m’engage</Link></Button>
+      <section className="relative isolate flex min-h-[690px] flex-col overflow-hidden bg-[#f7f7f7] sm:min-h-[660px] lg:min-h-[640px]">
+        <HomeHeroCarousel />
+        <div className="relative z-10 mx-auto flex w-full max-w-[1440px] flex-1 flex-col px-5 pb-5 pt-24 sm:px-9 sm:pb-7 sm:pt-28 lg:px-12">
+          <div className="home-copy-enter flex flex-1 items-center justify-center py-8 text-center">
+            <div className="max-w-[850px]">
+              <p className="mb-6 inline-flex items-center gap-2 rounded-full border border-[rgba(11,90,155,0.13)] bg-white/85 px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.17em] text-[var(--bk-marine)] shadow-sm backdrop-blur-sm sm:text-xs">
+                <span className="size-1.5 rounded-full bg-[var(--bk-rose)]" />
+                Organisation non gouvernementale
+              </p>
+              <h1 className="home-slogan text-balance font-display text-[clamp(2rem,6.3vw,5.75rem)] font-extrabold leading-[1.04] tracking-[-0.065em] text-[var(--bk-marine)]">
+                <span className="home-title-line block">Donnons de la</span>
+                <span className="home-title-line home-title-line-second home-slogan-accent mx-auto block">
+                  joie à la Jeunesse.
+                </span>
+              </h1>
+              <p className="mx-auto mt-6 max-w-[680px] text-[15px] leading-7 text-ink/75 sm:text-lg sm:leading-8">
+                Nous croyons au potentiel de chaque personne. Aux côtés des communautés, ONG BK agit pour ouvrir des chemins vers un avenir plus juste et plus solidaire.
+              </p>
             </div>
-            <div className="mt-10 flex items-center gap-3 text-xs text-ink/55">
-              <div className="flex -space-x-2">
+          </div>
+
+          <div className="grid items-center gap-5 rounded-[24px] border border-white/70 bg-white/80 p-4 shadow-[0_12px_36px_rgba(11,90,155,0.08)] backdrop-blur-md sm:p-5 lg:grid-cols-[minmax(220px,0.8fr)_minmax(0,1.6fr)] lg:gap-8 lg:px-7">
+            <div className="flex items-center gap-3 text-xs leading-5 text-ink/65 sm:text-sm">
+              <div aria-hidden="true" className="flex shrink-0 -space-x-2">
                 {["action-education.jpg", "action-solidarite.jpg", "action-communaute.jpg"].map((image) => (
-                  <span key={image} className="size-8 overflow-hidden rounded-full border-2 border-[#f6f4f1] bg-white">
-                    <Image alt="" className="h-full w-full object-cover" height={32} src={`/images/${image}`} width={32} />
+                  <span key={image} className="size-9 overflow-hidden rounded-full border-2 border-white bg-white shadow-sm">
+                    <Image alt="" className="h-full w-full object-cover" height={36} src={`/images/${image}`} width={36} />
                   </span>
                 ))}
               </div>
               <span>Au service des communautés, chaque jour.</span>
             </div>
-          </motion.div>
-
-          <motion.div
-            animate={{ opacity: 1, x: 0 }}
-            className="hero-visual relative mx-auto w-full max-w-[720px] lg:-mr-3"
-            initial={{ opacity: 0, x: 22 }}
-            transition={{ duration: 0.75, delay: 0.12, ease: "easeOut" }}
-          >
-            <HomeHeroCarousel />
-            <span className="hero-dot hero-dot-green" />
-            <span className="hero-dot hero-dot-gold" />
-            <span className="hero-dot hero-dot-blue" />
-          </motion.div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <Button asChild className="w-full justify-center bg-[var(--bk-ciel)] text-white shadow-sm hover:-translate-y-0.5 hover:bg-[var(--bk-bleu-clair)]" size="lg">
+                <Link href="#actions">Découvrir nos actions <ArrowRight size={16} /></Link>
+              </Button>
+              <Button asChild className="w-full justify-center bg-[var(--bk-rose)] text-white shadow-sm hover:-translate-y-0.5 hover:bg-[var(--bk-rose)]/90" size="lg">
+                <Link href="/adhesion">Je m’engage</Link>
+              </Button>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -96,6 +119,33 @@ export function HomePage({ activities }: { activities: HomeActivity[] }) {
           <div className="flex items-center gap-3 sm:justify-center sm:px-6">
             <span className="grid size-10 shrink-0 place-items-center rounded-full bg-[#eaf0f6] text-[#47709b]"><Leaf size={19} /></span>
             <p className="text-xs leading-5 text-ink/65"><strong className="block text-sm text-ink">Voir plus loin</strong>Un engagement durable et solidaire</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="impact-section py-16 sm:py-20" aria-labelledby="impact-title">
+        <div className="mx-auto max-w-[1320px] px-6 sm:px-10 lg:px-12">
+          <div className="max-w-[700px]">
+            <p className="section-eyebrow">Quelques chiffres clés</p>
+            <h2 className="section-title mt-3" id="impact-title">L’action de l’ONG BK en six repères.</h2>
+          </div>
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {impactCards.map((card, index) => (
+              <article className="impact-card group" data-reveal key={card.title} style={{ animationDelay: `${index * 70}ms` }}>
+                <span aria-hidden="true" className="impact-card-orbit" />
+                <p className="section-eyebrow">{card.title}</p>
+                <p className="mt-5 font-display text-3xl font-extrabold tracking-tight text-[var(--bk-marine)] sm:text-4xl">{card.figure}</p>
+                <p className="mt-2 text-sm font-semibold leading-6 text-[var(--bk-bleu-clair)]">{card.label}</p>
+                <ul className="mt-5 grid gap-2 border-t border-[rgba(11,90,155,0.1)] pt-4">
+                  {card.details.map((detail) => (
+                    <li className="flex gap-2 text-xs leading-5 text-ink/65 sm:text-sm" key={detail}>
+                      <span aria-hidden="true" className="mt-2 size-1.5 shrink-0 rounded-full bg-[var(--bk-rose)]" />
+                      {detail}
+                    </li>
+                  ))}
+                </ul>
+              </article>
+            ))}
           </div>
         </div>
       </section>
@@ -187,7 +237,7 @@ export function HomePage({ activities }: { activities: HomeActivity[] }) {
           </div>
           <Link className="inline-flex items-center gap-2 text-sm font-bold text-forest hover:gap-3" href="/actions#terrain">Voir toutes nos activités <ArrowRight size={16} /></Link>
         </div>
-        <HomeActivitiesCarousel activities={activities} />
+        <HomeActivitiesCarousel activities={activities} unavailable={activitiesUnavailable} />
       </section>
 
       <section className="bg-[#f5f2e9] py-16 sm:py-20" id="galerie">

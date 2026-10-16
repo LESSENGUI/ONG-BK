@@ -5,6 +5,7 @@ import { getDomainBySlug } from "@/lib/domains";
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
+  let activitiesUnavailable = false;
   const activities = process.env.DATABASE_URL
     ? await db.activity.findMany({
       where: { status: "COMPLETED", public: true, archivedAt: null },
@@ -18,11 +19,16 @@ export default async function Home() {
         eventDate: true,
         location: true,
       },
+    }).catch((error: unknown) => {
+      activitiesUnavailable = true;
+      console.error("Unable to load public activities for the home page:", error);
+      return [];
     })
     : [];
 
   return (
     <HomePage
+      activitiesUnavailable={activitiesUnavailable}
       activities={activities.map((activity) => ({
         ...activity,
         eventDate: activity.eventDate?.toISOString() ?? null,

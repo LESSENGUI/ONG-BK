@@ -1,3 +1,35 @@
+export const formationIaArticle = {
+  slug: "formation-ia-ong-bk",
+  title: "Formation : l’ONG-BK invite les jeunes à se lancer dans les métiers de l’intelligence artificielle",
+  category: "Formation et intelligence artificielle",
+  summary:
+    "Au forum Jeunesse intelligente, l’ONG-BK a sensibilisé les jeunes aux opportunités de l’intelligence artificielle et à l’importance d’en faire un usage responsable.",
+  sourceUrl:
+    "https://www.adiac-congo.com/content/formation-long-bk-invite-les-jeunes-se-lancer-dans-les-metiers-de-lintelligence-artificielle",
+  pdfUrl: "/pdf/journal-officiel-9-avril-2025.pdf",
+  images: [
+    "/images/formation-ia-1.jpeg",
+    "/images/formation-ia-2.jpeg",
+    "/images/formation-ia-3.jpeg",
+  ],
+  sections: [
+    {
+      heading: "La jeunesse au cœur des métiers de l’intelligence artificielle",
+      paragraphs: [
+        "Lors du forum Jeunesse intelligente, organisé par l’association Jeunesse 242, l’ONG-BK a invité les jeunes à s’intéresser aux métiers de l’intelligence artificielle. Autour du thème « L’appropriation de l’IA par la jeunesse », les intervenants ont présenté les possibilités offertes par ce domaine en pleine évolution.",
+        "Les participants ont également échangé sur les usages de l’intelligence artificielle et les risques qu’elle peut représenter pour la société.",
+      ],
+    },
+    {
+      heading: "Promouvoir un usage responsable de l’IA",
+      paragraphs: [
+        "Les échanges ont mis l’accent sur l’importance d’une appropriation responsable de l’intelligence artificielle, afin que les jeunes puissent prendre part aux transformations numériques et contribuer à la construction de leur avenir.",
+        "À l’issue du forum, Christ Juvalin Lessengui, secrétaire général adjoint de l’ONG-BK, a reçu le prix d’excellence Leader du Congo décerné par l’association Jeunesse 242.",
+      ],
+    },
+  ],
+};
+
 export const equalityArticle = {
   slug: "egalite-hommes-femmes",
   type: "PUBLICATION",

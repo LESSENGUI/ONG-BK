@@ -4,15 +4,15 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-sm font-bold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-sm font-bold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--bk-ciel)] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
-        primary: "bg-sun text-ink shadow-sm hover:-translate-y-0.5 hover:bg-[#f2c95e]",
-        forest: "bg-forest text-white shadow-sm hover:-translate-y-0.5 hover:bg-[#104b3c]",
+        primary: "bg-[var(--bk-ciel)] text-white shadow-[0_12px_30px_rgba(25,167,230,0.28)] hover:-translate-y-0.5 hover:bg-[var(--bk-bleu-clair)]",
+        forest: "bg-[var(--bk-marine)] text-white shadow-[0_12px_30px_rgba(11,90,155,0.26)] hover:-translate-y-0.5 hover:bg-[var(--bk-marine)]/90",
         outline:
-          "border border-forest/30 bg-white/70 text-forest hover:border-forest hover:bg-white",
-        ghost: "text-ink hover:bg-ink/5",
+          "border border-[var(--bk-marine)]/25 bg-white/80 text-[var(--bk-marine)] hover:border-[var(--bk-ciel)] hover:bg-[rgba(25,167,230,0.06)]",
+        ghost: "text-[var(--bk-texte)] hover:bg-[rgba(59,74,90,0.05)]",
       },
       size: {
         default: "min-h-12 px-6 py-3",

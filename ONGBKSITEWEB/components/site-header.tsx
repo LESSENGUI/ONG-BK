@@ -77,13 +77,13 @@ export function SiteHeader() {
 
   return (
     <>
-      <div className="hidden bg-[#f2f1ee] py-2 text-ink sm:block">
+      <div className="hidden bg-[linear-gradient(90deg,rgba(25,167,230,0.08),rgba(232,25,95,0.04),rgba(255,255,255,0.7))] py-2 text-ink sm:block">
         <div className="mx-auto flex max-w-[1360px] items-center justify-between px-6 text-[11px] tracking-wide lg:px-12">
-          <p className="text-ink/70">Ensemble, faisons grandir les initiatives locales.</p>
-          <Link className="text-ink/80 transition-colors hover:text-forest" href="/contact">Une question ? Écrivez-nous</Link>
+          <p className="text-[var(--bk-marine)]/75">Ensemble, faisons grandir les initiatives locales.</p>
+          <Link className="text-[var(--bk-texte)]/80 transition-colors hover:text-[var(--bk-ciel)]" href="/contact">Une question ? Écrivez-nous</Link>
         </div>
       </div>
-      <header className="relative z-30 border-b border-ink/[0.06] bg-white/90 backdrop-blur-sm">
+      <header className="relative z-30 border-b border-[rgba(59,74,90,0.08)] bg-white/90 backdrop-blur-sm">
         <div className="mx-auto flex h-[82px] max-w-[1440px] items-center justify-between gap-5 px-5 md:px-9 xl:px-12">
           <Link href="/" aria-label="ONG BK — accueil" className="flex shrink-0 items-center gap-2.5">
             <span aria-hidden="true" className="relative h-8 w-11 shrink-0 overflow-hidden">
@@ -98,8 +98,8 @@ export function SiteHeader() {
                 <Link className={`nav-link inline-flex items-center gap-1.5 ${pathname === group.href ? "nav-link-active" : ""}`} href={group.href}>
                   {group.title}<ChevronDown className="transition-transform group-hover:rotate-180" size={13} />
                 </Link>
-                <div className="invisible absolute left-0 top-full z-40 w-64 translate-y-2 rounded-2xl border border-ink/[0.07] bg-white p-2 opacity-0 shadow-soft transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
-                  {group.links.map(([label, link]) => <Link key={label} className="block rounded-xl px-3.5 py-2.5 text-[12px] text-ink/70 transition-colors hover:bg-paper hover:text-forest" href={link}>{label}</Link>)}
+                <div className="invisible absolute left-0 top-full z-40 w-64 translate-y-2 rounded-2xl border border-[rgba(59,74,90,0.08)] bg-white p-2 opacity-0 shadow-soft transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
+                  {group.links.map(([label, link]) => <Link key={label} className="block rounded-xl px-3.5 py-2.5 text-[12px] text-ink/70 transition-colors hover:bg-[rgba(25,167,230,0.06)] hover:text-[var(--bk-marine)]" href={link}>{label}</Link>)}
                 </div>
               </div>
             ))}
@@ -107,13 +107,13 @@ export function SiteHeader() {
           </nav>
           <div className="hidden shrink-0 items-center gap-3 xl:flex">
             <Link className={`text-[11px] font-semibold transition-colors hover:text-forest ${pathname === "/admin" ? "text-forest" : "text-ink/65"}`} href="/admin">Adminis</Link>
-            <Button asChild className="bg-[#f1c966] text-ink shadow-sm hover:-translate-y-0.5 hover:bg-[#e4b64a]">
+            <Button asChild className="bg-[var(--bk-rose)] text-white shadow-[0_12px_26px_rgba(232,25,95,0.26)] hover:-translate-y-0.5 hover:bg-[var(--bk-rose)]/90">
               <Link href="/donate"><CircleDollarSign size={15} /> Donate</Link>
             </Button>
             <div className="group relative">
               <Button asChild><Link href="/adhesion">Nous rejoindre <ChevronDown className="transition-transform group-hover:rotate-180" size={14} /></Link></Button>
-              <div className="invisible absolute right-0 top-full z-40 w-64 translate-y-2 rounded-2xl border border-ink/[0.07] bg-white p-2 opacity-0 shadow-soft transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
-                {joinLinks.map(([label, link]) => <Link key={label} className="block rounded-xl px-3.5 py-2.5 text-[12px] text-ink/70 transition-colors hover:bg-paper hover:text-forest" href={link}>{label}</Link>)}
+              <div className="invisible absolute right-0 top-full z-40 w-64 translate-y-2 rounded-2xl border border-[rgba(59,74,90,0.08)] bg-white p-2 opacity-0 shadow-soft transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
+                {joinLinks.map(([label, link]) => <Link key={label} className="block rounded-xl px-3.5 py-2.5 text-[12px] text-ink/70 transition-colors hover:bg-[rgba(25,167,230,0.06)] hover:text-[var(--bk-marine)]" href={link}>{label}</Link>)}
               </div>
             </div>
           </div>

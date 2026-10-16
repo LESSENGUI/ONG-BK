@@ -8,9 +8,10 @@ export function Card({
   return (
     <div
       className={cn(
-        "rounded-3xl border border-ink/[0.07] bg-white shadow-[0_10px_36px_rgba(23,45,78,0.055)]",
+        "brand-card rounded-[28px] border border-[rgba(59,74,90,0.09)] bg-white/95 shadow-[0_18px_42px_rgba(11,90,155,0.08)]",
         className,
       )}
+      data-reveal
       {...props}
     />
   );

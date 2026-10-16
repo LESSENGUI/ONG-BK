@@ -2,8 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, CalendarDays, Clock3 } from "lucide-react";
+import { NewsPhotoCarousel } from "@/components/news-photo-carousel";
 import { db } from "@/lib/db";
-import { equalityArticle } from "@/lib/public-articles";
+import { equalityArticle, formationIaArticle } from "@/lib/public-articles";
 
 export const dynamic = "force-dynamic";
 
@@ -14,6 +15,52 @@ const displayDate = (date: string | Date | null) =>
 
 export default async function NewsArticlePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
+  if (slug === formationIaArticle.slug) {
+    return (
+      <main className="min-h-screen bg-white">
+        <article className="mx-auto max-w-[900px] px-5 pb-20 pt-8 sm:px-8 sm:pt-12">
+          <Link className="inline-flex items-center gap-2 text-sm font-semibold text-forest hover:underline" href="/actualites"><ArrowLeft size={16} /> Retour aux actualités</Link>
+          <NewsPhotoCarousel images={formationIaArticle.images} />
+          <header className="mx-auto max-w-[760px] pt-8 sm:pt-10">
+            <p className="section-eyebrow">{formationIaArticle.category}</p>
+            <h1 className="mt-4 font-display text-3xl font-bold leading-tight text-ink sm:text-5xl">{formationIaArticle.title}</h1>
+            <p className="mt-5 text-lg leading-8 text-ink/65">{formationIaArticle.summary}</p>
+            <p className="mt-6 border-y border-ink/10 py-4 text-sm text-ink/55">Source éditoriale : ADIAC-CONGO</p>
+          </header>
+          <div className="mx-auto mt-8 max-w-[760px]">
+            {formationIaArticle.sections.map((section) => (
+              <section className="mb-8" key={section.heading}>
+                <h2 className="font-display text-2xl font-bold text-forest">{section.heading}</h2>
+                {section.paragraphs.map((paragraph) => <p className="mt-4 text-base leading-8 text-ink/75" key={paragraph}>{paragraph}</p>)}
+              </section>
+            ))}
+            <aside className="mt-10 grid gap-3 rounded-3xl border border-ink/10 bg-[#fbfaf8] p-5 sm:grid-cols-2 sm:p-7">
+              <a
+                className="inline-flex min-h-12 items-center justify-center rounded-full bg-forest px-5 text-center text-sm font-bold text-white transition hover:bg-forest/90"
+                href={formationIaArticle.sourceUrl}
+                rel="noreferrer"
+                target="_blank"
+              >
+                Lire l’article original sur ADIAC
+              </a>
+              <a
+                className="inline-flex min-h-12 items-center justify-center rounded-full border border-forest/20 bg-white px-5 text-center text-sm font-bold text-forest transition hover:bg-forest/5"
+                href={formationIaArticle.pdfUrl}
+                rel="noreferrer"
+                target="_blank"
+              >
+                Consulter le Journal officiel (PDF)
+              </a>
+            </aside>
+            <p className="mt-3 text-xs leading-5 text-ink/45">
+              Le document PDF s’ouvre dans un nouvel onglet. Il est également disponible dans les documents de l’ONG-BK.
+            </p>
+          </div>
+        </article>
+      </main>
+    );
+  }
+
   if (slug === equalityArticle.slug) {
     return (
       <main className="min-h-screen bg-white">

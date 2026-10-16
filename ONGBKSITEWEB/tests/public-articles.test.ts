@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { createArticleSlug, equalityArticle, getApplicationPeriod, languageTrainingOpportunity } from "../lib/public-articles";
+import { createArticleSlug, equalityArticle, formationIaArticle, getApplicationPeriod, languageTrainingOpportunity } from "../lib/public-articles";
 import { publicSubmissionSchema, publicationSchema } from "../lib/operations-validation";
 
 test("creates stable URL slugs from French titles", () => {
@@ -12,6 +12,17 @@ test("the public equality article contains complete, non-empty editorial section
   assert.ok(equalityArticle.sections.length >= 4);
   assert.ok(equalityArticle.sections.every((section) => section.heading.length > 0 && section.paragraphs.every((paragraph) => paragraph.length > 100)));
   assert.ok(equalityArticle.conclusion.length > 100);
+});
+
+test("the AI training article links its source and PDF and includes three photos", () => {
+  assert.match(formationIaArticle.title, /intelligence artificielle/);
+  assert.equal(formationIaArticle.images.length, 3);
+  assert.equal(
+    formationIaArticle.sourceUrl,
+    "https://www.adiac-congo.com/content/formation-long-bk-invite-les-jeunes-se-lancer-dans-les-metiers-de-lintelligence-artificielle",
+  );
+  assert.equal(formationIaArticle.pdfUrl, "/pdf/journal-officiel-9-avril-2025.pdf");
+  assert.ok(formationIaArticle.sections.length > 0);
 });
 
 test("the foreign-language training offer uses the requested inclusive application dates", () => {

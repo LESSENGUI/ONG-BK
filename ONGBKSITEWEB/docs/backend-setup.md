@@ -71,6 +71,12 @@
 
    En production, appliquer uniquement les migrations déjà générées avec `npm run db:deploy` ; ne pas utiliser `migrate dev` sur la base de production.
 
+## Déploiement sur Vercel et erreur d’authentification PostgreSQL
+
+Un déploiement réussi ne vérifie pas que l’application peut se connecter à PostgreSQL. Si les logs indiquent `Authentication failed` ou que les identifiants PostgreSQL ne sont pas valides, vérifiez dans **Vercel → Project → Settings → Environment Variables** que `DATABASE_URL` et `DIRECT_URL` contiennent les URL actuelles fournies par votre hébergeur PostgreSQL. Vérifiez aussi que les variables sont activées pour l’environnement concerné (Production, Preview ou Development), puis redéployez pour que les nouvelles valeurs soient prises en compte.
+
+Utilisez le type de connexion recommandé par votre fournisseur pour `DATABASE_URL` (connexion applicative, éventuellement via un pooler) et l’URL directe adaptée aux migrations pour `DIRECT_URL`. Si le mot de passe contient des caractères spéciaux, encodez-les dans l’URL. Ne copiez jamais ces valeurs dans un chat ou dans le dépôt. La page d’accueil reste affichable si le chargement des activités échoue, mais les fonctions qui lisent ou enregistrent des données nécessitent toujours une connexion PostgreSQL valide.
+
 ## Premier compte administrateur
 
 Sur `/admin/login`, le lien « Créer le premier compte administrateur » apparaît tant qu’aucun compte utilisateur n’existe. La route `/admin/setup` permet alors de créer le compte `SYSTEM_ADMIN` avec vos propres identifiants et ouvre une session après la création. La transaction sérialise les créations concurrentes ; dès qu’un utilisateur existe, l’inscription initiale est fermée. Aucun compte ni mot de passe par défaut n’est créé. Le rôle `SYSTEM_ADMIN` peut créer les comptes opérationnels et affecter des tâches, sans pouvoir d’approbation financière ou institutionnelle ; le rôle `TECHNICAL_ADMIN` n’est pas un administrateur principal.
