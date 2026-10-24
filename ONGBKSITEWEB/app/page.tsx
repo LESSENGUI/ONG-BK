@@ -1,11 +1,15 @@
-import { HomePage } from "@/components/home-page";
+import { HomePage, type HomeNews, type HomeOpportunity, type HomeProject } from "@/components/home-page";
 import { db } from "@/lib/db";
 import { getDomainBySlug } from "@/lib/domains";
+import { getApplicationPeriod, languageTrainingOpportunity } from "@/lib/public-articles";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
   let activitiesUnavailable = false;
+  let newsUnavailable = false;
+  let projectsUnavailable = false;
+  let opportunitiesUnavailable = false;
   const activities = process.env.DATABASE_URL
     ? await db.activity.findMany({
       where: { status: "COMPLETED", public: true, archivedAt: null },
@@ -26,6 +30,126 @@ export default async function Home() {
     })
     : [];
 
+  let news: HomeNews[] = [];
+  let projects: HomeProject[] = [];
+  let opportunities: HomeOpportunity[] = [];
+
+  if (process.env.DATABASE_URL) {
+    const [publishedNews, publishedProjects, publishedOpportunities] = await Promise.all([
+      db.publication.findMany({
+        where: { type: "NEWS", status: "PUBLISHED", archivedAt: null, publishedAt: { not: null } },
+        orderBy: { publishedAt: "desc" },
+        take: 4,
+        select: {
+          slug: true,
+          title: true,
+          summary: true,
+          category: true,
+          publishedAt: true,
+          coverMedia: { select: { id: true, altText: true, status: true, publishedAt: true, archivedAt: true } },
+        },
+      }).catch((error: unknown) => {
+        newsUnavailable = true;
+        console.error("Unable to load published news for the home page:", error);
+        return [];
+      }),
+      db.project.findMany({
+        where: { status: "IN_PROGRESS", archivedAt: null, publishedAt: { not: null } },
+        orderBy: [{ publishedAt: "desc" }, { updatedAt: "desc" }],
+        take: 3,
+        select: {
+          slug: true,
+          title: true,
+          description: true,
+          domain: true,
+          status: true,
+          startDate: true,
+          endDate: true,
+          media: {
+            where: { status: "PUBLISHED", archivedAt: null, publishedAt: { not: null }, mediaType: { startsWith: "image/" } },
+            orderBy: { publishedAt: "desc" },
+            take: 1,
+            select: { id: true, altText: true },
+          },
+        },
+      }).catch((error: unknown) => {
+        projectsUnavailable = true;
+        console.error("Unable to load published projects for the home page:", error);
+        return [];
+      }),
+      db.publication.findMany({
+        where: {
+          type: { in: ["VOLUNTEER_CALL", "PROJECT_CALL", "TRAINING_CALL"] },
+          status: "PUBLISHED",
+          archivedAt: null,
+          publishedAt: { not: null },
+        },
+        orderBy: { publishedAt: "desc" },
+        take: 4,
+        select: { slug: true, title: true, summary: true, category: true, type: true, tags: true, publishedAt: true },
+      }).catch((error: unknown) => {
+        opportunitiesUnavailable = true;
+        console.error("Unable to load published opportunities for the home page:", error);
+        return [];
+      }),
+    ]);
+
+    news = publishedNews.flatMap((item) => {
+      if (!item.publishedAt) return [];
+      const coverIsPublic = item.coverMedia?.status === "PUBLISHED" && Boolean(item.coverMedia.publishedAt) && !item.coverMedia.archivedAt;
+      return [{
+        slug: item.slug,
+        title: item.title,
+        summary: item.summary,
+        category: item.category,
+        publishedAt: item.publishedAt.toISOString(),
+        coverMediaId: coverIsPublic ? item.coverMedia?.id ?? null : null,
+        coverMediaAlt: coverIsPublic ? item.coverMedia?.altText ?? null : null,
+      }];
+    });
+
+    projects = publishedProjects.map((project) => ({
+      slug: project.slug,
+      title: project.title,
+      description: project.description,
+      domain: project.domain,
+      status: project.status,
+      startDate: project.startDate?.toISOString() ?? null,
+      endDate: project.endDate?.toISOString() ?? null,
+      coverMediaId: project.media[0]?.id ?? null,
+      coverMediaAlt: project.media[0]?.altText ?? null,
+    }));
+
+    opportunities = publishedOpportunities.flatMap((opportunity) => {
+      if (!opportunity.publishedAt) return [];
+      const period = getApplicationPeriod(opportunity.tags);
+      return [{
+        slug: opportunity.slug,
+        title: opportunity.title,
+        summary: opportunity.summary,
+        category: opportunity.category,
+        type: opportunity.type,
+        publishedAt: opportunity.publishedAt.toISOString(),
+        applicationPeriod: period
+          ? { start: period.start.toISOString(), end: period.end.toISOString() }
+          : null,
+      }];
+    });
+  } else {
+    const period = getApplicationPeriod(languageTrainingOpportunity.tags);
+    opportunities = [{
+      slug: languageTrainingOpportunity.slug,
+      title: languageTrainingOpportunity.title,
+      summary: languageTrainingOpportunity.summary,
+      category: languageTrainingOpportunity.category,
+      type: languageTrainingOpportunity.type,
+      publishedAt: null,
+      applicationPeriod: period
+        ? { start: period.start.toISOString(), end: period.end.toISOString() }
+        : null,
+    }];
+  }
+
   return (
     <HomePage
       activitiesUnavailable={activitiesUnavailable}
@@ -34,6 +158,12 @@ export default async function Home() {
         eventDate: activity.eventDate?.toISOString() ?? null,
         coverImage: getDomainBySlug(activity.domain)?.coverImage ?? "/images/action-communaute.jpg",
       }))}
+      news={news}
+      newsUnavailable={newsUnavailable}
+      projects={projects}
+      projectsUnavailable={projectsUnavailable}
+      opportunities={opportunities}
+      opportunitiesUnavailable={opportunitiesUnavailable}
     />
   );
 }

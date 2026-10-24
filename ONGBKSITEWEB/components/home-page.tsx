@@ -3,8 +3,17 @@ import Link from "next/link";
 import {
   ArrowRight,
   ArrowUpRight,
+  BookOpen,
+  BriefcaseBusiness,
+  CalendarDays,
+  CheckCircle2,
+  Handshake,
   HeartHandshake,
+  HeartPulse,
+  Landmark,
   Leaf,
+  Newspaper,
+  School,
   Sparkles,
   UsersRound,
 } from "lucide-react";
@@ -13,6 +22,40 @@ import { Card } from "@/components/ui/card";
 import { publishedDomains } from "@/lib/domains";
 import { HomeHeroCarousel } from "@/components/home-hero-carousel";
 import { HomeActivitiesCarousel, type HomeActivity } from "@/components/home-activities-carousel";
+import { HomeJoinGallery } from "@/components/home-join-gallery";
+import { convictions } from "@/lib/about-preamble";
+
+export type HomeNews = {
+  slug: string;
+  title: string;
+  summary: string;
+  category: string;
+  publishedAt: string;
+  coverMediaId: string | null;
+  coverMediaAlt: string | null;
+};
+
+export type HomeProject = {
+  slug: string;
+  title: string;
+  description: string;
+  domain: string;
+  status: string;
+  startDate: string | null;
+  endDate: string | null;
+  coverMediaId: string | null;
+  coverMediaAlt: string | null;
+};
+
+export type HomeOpportunity = {
+  slug: string;
+  title: string;
+  summary: string;
+  category: string;
+  type: string;
+  publishedAt: string | null;
+  applicationPeriod: { start: string; end: string } | null;
+};
 
 export const impactCards = [
   {
@@ -53,16 +96,31 @@ export const impactCards = [
   },
 ];
 
+const formatHomeDate = (value: string) =>
+  new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(value));
+
 export function HomePage({
   activities,
   activitiesUnavailable = false,
+  news = [],
+  newsUnavailable = false,
+  projects = [],
+  projectsUnavailable = false,
+  opportunities = [],
+  opportunitiesUnavailable = false,
 }: {
   activities: HomeActivity[];
   activitiesUnavailable?: boolean;
+  news?: HomeNews[];
+  newsUnavailable?: boolean;
+  projects?: HomeProject[];
+  projectsUnavailable?: boolean;
+  opportunities?: HomeOpportunity[];
+  opportunitiesUnavailable?: boolean;
 }) {
   return (
     <main>
-      <section className="relative isolate flex min-h-[690px] flex-col overflow-hidden bg-[#f7f7f7] sm:min-h-[660px] lg:min-h-[640px]">
+      <section className="home-hero relative isolate flex min-h-[690px] flex-col overflow-hidden bg-[#193b4b] sm:min-h-[660px] lg:min-h-[640px]">
         <HomeHeroCarousel />
         <div className="relative z-10 mx-auto flex w-full max-w-[1440px] flex-1 flex-col px-5 pb-5 pt-24 sm:px-9 sm:pb-7 sm:pt-28 lg:px-12">
           <div className="home-copy-enter flex flex-1 items-center justify-center py-8 text-center">
@@ -77,7 +135,7 @@ export function HomePage({
                   joie à la Jeunesse.
                 </span>
               </h1>
-              <p className="mx-auto mt-6 max-w-[680px] text-[15px] leading-7 text-ink/75 sm:text-lg sm:leading-8">
+              <p className="home-hero-description mx-auto mt-6 max-w-[680px] text-[15px] leading-7 text-ink/75 sm:text-lg sm:leading-8">
                 Nous croyons au potentiel de chaque personne. Aux côtés des communautés, ONG BK agit pour ouvrir des chemins vers un avenir plus juste et plus solidaire.
               </p>
             </div>
@@ -106,101 +164,105 @@ export function HomePage({
         </div>
       </section>
 
-      <section className="border-y border-ink/[0.06] bg-white">
-        <div className="mx-auto grid max-w-[1320px] gap-5 px-6 py-7 sm:grid-cols-3 sm:gap-0 sm:divide-x sm:divide-ink/10 sm:px-10 lg:px-12">
-          <div className="flex items-center gap-3 sm:justify-center sm:px-6">
-            <span className="grid size-10 shrink-0 place-items-center rounded-full bg-[#edf3e8] text-forest"><UsersRound size={19} /></span>
-            <p className="text-xs leading-5 text-ink/65"><strong className="block text-sm text-ink">Agir ensemble</strong>La force de l’engagement collectif</p>
-          </div>
-          <div className="flex items-center gap-3 sm:justify-center sm:px-6">
-            <span className="grid size-10 shrink-0 place-items-center rounded-full bg-[#f7f0df] text-[#a77a20]"><HeartHandshake size={19} /></span>
-            <p className="text-xs leading-5 text-ink/65"><strong className="block text-sm text-ink">Être à l’écoute</strong>Des réponses ancrées dans le terrain</p>
-          </div>
-          <div className="flex items-center gap-3 sm:justify-center sm:px-6">
-            <span className="grid size-10 shrink-0 place-items-center rounded-full bg-[#eaf0f6] text-[#47709b]"><Leaf size={19} /></span>
-            <p className="text-xs leading-5 text-ink/65"><strong className="block text-sm text-ink">Voir plus loin</strong>Un engagement durable et solidaire</p>
-          </div>
-        </div>
-      </section>
-
-      <section className="impact-section py-16 sm:py-20" aria-labelledby="impact-title">
+      <section className="impact-section py-14 sm:py-20" aria-labelledby="impact-title">
         <div className="mx-auto max-w-[1320px] px-6 sm:px-10 lg:px-12">
-          <div className="max-w-[700px]">
+          <div className="mx-auto max-w-[700px] text-center">
             <p className="section-eyebrow">Quelques chiffres clés</p>
             <h2 className="section-title mt-3" id="impact-title">L’action de l’ONG BK en six repères.</h2>
+            <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-ink/55">Des indicateurs présentés dans les contenus institutionnels de l’organisation.</p>
           </div>
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {impactCards.map((card, index) => (
-              <article className="impact-card group" data-reveal key={card.title} style={{ animationDelay: `${index * 70}ms` }}>
-                <span aria-hidden="true" className="impact-card-orbit" />
-                <p className="section-eyebrow">{card.title}</p>
-                <p className="mt-5 font-display text-3xl font-extrabold tracking-tight text-[var(--bk-marine)] sm:text-4xl">{card.figure}</p>
-                <p className="mt-2 text-sm font-semibold leading-6 text-[var(--bk-bleu-clair)]">{card.label}</p>
-                <ul className="mt-5 grid gap-2 border-t border-[rgba(11,90,155,0.1)] pt-4">
-                  {card.details.map((detail) => (
-                    <li className="flex gap-2 text-xs leading-5 text-ink/65 sm:text-sm" key={detail}>
-                      <span aria-hidden="true" className="mt-2 size-1.5 shrink-0 rounded-full bg-[var(--bk-rose)]" />
-                      {detail}
-                    </li>
-                  ))}
-                </ul>
-              </article>
-            ))}
+          <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 lg:gap-4">
+            {impactCards.map((card, index) => {
+              const Icon = [BookOpen, BriefcaseBusiness, HeartHandshake, HeartPulse, Leaf, UsersRound][index] ?? UsersRound;
+              return (
+                <article className="impact-card group !min-h-0 !rounded-[22px] !p-5 !shadow-[0_10px_28px_rgba(11,90,155,0.055)] sm:!p-6" data-reveal key={card.title} style={{ animationDelay: `${index * 70}ms` }}>
+                  <div className="flex items-center gap-3">
+                    <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-[rgba(25,167,230,0.09)] text-[var(--bk-ciel)]">
+                      <Icon aria-hidden="true" size={17} strokeWidth={1.8} />
+                    </span>
+                    <p className="text-[10px] font-bold uppercase leading-4 tracking-[0.12em] text-ink/50">{card.title}</p>
+                  </div>
+                  <div className="mt-4 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                    <p className="font-display text-[1.75rem] font-extrabold leading-none tracking-[-0.04em] text-[var(--bk-marine)] sm:text-3xl">{card.figure}</p>
+                    <p className="text-xs font-semibold leading-5 text-[var(--bk-bleu-clair)]">{card.label}</p>
+                  </div>
+                  <details className="mt-4 border-t border-[rgba(11,90,155,0.09)] pt-3">
+                    <summary className="w-fit cursor-pointer text-[11px] font-semibold text-[var(--bk-ciel)] decoration-[rgba(11,90,155,0.3)] underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--bk-ciel)]">
+                      Voir les indicateurs associés ({card.details.length})
+                    </summary>
+                    <ul className="mt-3 grid gap-x-4 gap-y-1.5 sm:grid-cols-2">
+                      {card.details.map((detail) => (
+                        <li className="flex gap-2 text-[10px] leading-[1.45rem] text-ink/55 sm:text-[11px]" key={detail}>
+                          <span aria-hidden="true" className="mt-[9px] size-1 shrink-0 rounded-full bg-[var(--bk-rose)]" />
+                          {detail}
+                        </li>
+                      ))}
+                    </ul>
+                  </details>
+                </article>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-[1320px] gap-12 px-6 py-20 sm:px-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-center lg:gap-20 lg:px-12 lg:py-28" id="mission">
-        <div className="relative max-w-[550px]">
-          <div className="absolute -left-8 -top-7 -z-10 size-24 rounded-full bg-[#f6f0df]" />
-          <p className="section-eyebrow">À propos de ONG BK</p>
-          <h2 className="section-title mt-4">Chaque communauté porte en elle une promesse.</h2>
-          <p className="mt-5 text-sm leading-7 text-ink/65 sm:text-[15px]">
-            ONG BK est une organisation engagée auprès des populations. Avec nos membres, bénévoles et partenaires, nous contribuons à des initiatives qui favorisent l’épanouissement, l’autonomie et la solidarité.
-          </p>
-          <Link className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-forest hover:gap-3" href="#association">
-            En savoir plus sur notre ONG <ArrowRight size={16} />
-          </Link>
-        </div>
-        <div className="grid gap-4 sm:grid-cols-2">
-          <Card className="bg-[#f7f6f0] p-6 sm:mt-8 sm:p-8">
-            <span className="grid size-11 place-items-center rounded-2xl bg-white text-forest"><Sparkles size={20} /></span>
-            <h3 className="mt-5 font-display text-lg font-bold">Notre vision</h3>
-            <p className="mt-2 text-sm leading-6 text-ink/60">Des communautés où chacun peut trouver sa place, développer ses capacités et prendre part à un avenir commun.</p>
-            <Link className="mt-5 inline-flex items-center gap-2 text-xs font-bold text-forest" href="/a-propos#vision-mission">Lire notre vision <ArrowRight size={14} /></Link>
-          </Card>
-          <Card className="bg-[#f0f5f1] p-6 sm:p-8">
-            <span className="grid size-11 place-items-center rounded-2xl bg-white text-forest"><HeartHandshake size={20} /></span>
-            <h3 className="mt-5 font-display text-lg font-bold">Notre mission</h3>
-            <p className="mt-2 text-sm leading-6 text-ink/60">Concevoir et soutenir des actions utiles, inclusives et durables, au plus près des besoins locaux.</p>
-            <Link className="mt-5 inline-flex items-center gap-2 text-xs font-bold text-forest" href="/a-propos#vision-mission">Découvrir notre mission <ArrowRight size={14} /></Link>
-          </Card>
-        </div>
-      </section>
-
-      <section className="overflow-hidden bg-[#123f34] py-16 text-white sm:py-20" id="histoire">
-        <div className="mx-auto grid max-w-[1320px] gap-10 px-6 sm:px-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:px-12">
-          <div>
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#f1cf75]">Notre histoire</p>
-            <h2 className="mt-4 font-display text-3xl font-bold leading-tight tracking-[-0.04em] sm:text-4xl">Un engagement qui se construit avec les communautés.</h2>
-            <p className="mt-5 text-sm leading-7 text-white/75">L’histoire d’ONG BK s’exprime dans une conviction : les changements durables se construisent avec les personnes concernées. Écouter les réalités locales, reconnaître les capacités de chacun et créer des liens de solidarité donnent du sens à notre engagement.</p>
-            <p className="mt-4 text-sm leading-7 text-white/75">Cette démarche relie la jeunesse, les familles, les bénévoles et les partenaires autour d’initiatives qui favorisent l’apprentissage, l’autonomie, le bien-être et la participation. Elle invite à avancer avec responsabilité, à partager les expériences et à apprendre de chaque action.</p>
-            <Link className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-[#f1cf75] hover:gap-3" href="/a-propos#historique">En savoir plus sur notre parcours <ArrowRight size={16} /></Link>
-          </div>
-          <div className="grid gap-3 sm:grid-cols-3">
-            {[
-              ["Écouter", "Comprendre les besoins et les aspirations exprimés par les personnes et les communautés."],
-              ["Agir", "Faire émerger des initiatives utiles, inclusives et adaptées aux réalités locales."],
-              ["Apprendre", "Documenter les expériences et renforcer les actions avec les communautés et partenaires."],
-            ].map(([title, description], index) => (
-              <Link className="rounded-2xl border border-white/15 bg-white/[0.06] p-5 transition-colors hover:bg-white/[0.11]" href="/a-propos#historique" key={title}>
-                <span className="font-display text-xs font-bold tracking-[0.16em] text-[#f1cf75]">0{index + 1}</span>
-                <h3 className="mt-5 font-display text-lg font-bold">{title}</h3>
-                <p className="mt-2 text-xs leading-6 text-white/70">{description}</p>
-                <span className="mt-4 inline-flex items-center gap-2 text-xs font-bold text-white">Découvrir <ArrowUpRight size={14} /></span>
+      <section className="bg-[#fbfaf7] py-20 sm:py-24" id="mission">
+        <div className="mx-auto grid max-w-[1320px] gap-10 px-6 sm:px-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-16 lg:px-12">
+          <div className="relative">
+            <p className="section-eyebrow">Notre identité</p>
+            <h2 className="section-title mt-4">Qui nous sommes</h2>
+            <p className="mt-5 text-sm leading-7 text-ink/65 sm:text-[15px]">
+              ONG BK est une organisation engagée auprès des populations. Avec ses membres, bénévoles et partenaires, elle contribue à des initiatives qui favorisent l’épanouissement, l’autonomie et la solidarité.
+            </p>
+            <div className="mt-7 grid gap-3 sm:grid-cols-2">
+              <Link className="rounded-2xl border border-ink/10 bg-white p-4 transition hover:-translate-y-0.5 hover:shadow-soft" href="/about/vision">
+                <span className="grid size-10 place-items-center rounded-xl bg-[#edf3e8] text-forest"><Sparkles size={18} /></span>
+                <span className="mt-3 block font-display text-sm font-bold">Notre vision</span>
+                <span className="mt-1 block text-xs leading-5 text-ink/60">Une jeunesse actrice de son avenir, dans des communautés solidaires.</span>
               </Link>
-            ))}
+              <Link className="rounded-2xl border border-ink/10 bg-white p-4 transition hover:-translate-y-0.5 hover:shadow-soft" href="/about/mission">
+                <span className="grid size-10 place-items-center rounded-xl bg-[#f7f0df] text-[#a77a20]"><HeartHandshake size={18} /></span>
+                <span className="mt-3 block font-display text-sm font-bold">Notre mission</span>
+                <span className="mt-1 block text-xs leading-5 text-ink/60">Accompagner la jeunesse et les communautés par des initiatives utiles.</span>
+              </Link>
+            </div>
+            <Link className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-forest hover:gap-3" href="/a-propos">
+              Découvrir l’ONG BK <ArrowRight size={16} />
+            </Link>
           </div>
+          <div className="relative min-h-[300px] overflow-hidden rounded-[30px] bg-[#dce7df] shadow-[0_24px_70px_rgba(16,36,61,0.13)] sm:min-h-[390px]">
+            <Image alt="Des membres de la communauté réunis autour d’une activité collective" className="object-cover" fill sizes="(max-width: 1024px) 100vw, 55vw" src="/images/action-communaute.jpg" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#10243d]/65 via-transparent to-transparent" />
+            <p className="absolute bottom-6 left-6 max-w-sm font-display text-xl font-bold leading-snug text-white sm:bottom-8 sm:left-8 sm:text-2xl">
+              Agir avec les communautés, au plus près de leurs réalités.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="relative overflow-hidden bg-[#f5f7f8] py-20 sm:py-28" id="histoire">
+        <div aria-hidden="true" className="absolute -right-32 -top-40 size-[520px] rounded-full bg-[radial-gradient(circle,rgba(11,90,155,0.07),transparent_68%)]" />
+        <div className="relative mx-auto grid max-w-[1320px] gap-12 px-6 sm:px-10 lg:grid-cols-[0.78fr_1.22fr] lg:items-center lg:gap-16 lg:px-12">
+          <div className="max-w-[470px]">
+            <p className="section-eyebrow">Notre histoire</p>
+            <h2 className="section-title mt-4">Un engagement qui se construit avec les communautés.</h2>
+            <p className="mt-5 text-sm leading-7 text-ink/65">Le parcours institutionnel de l’ONG BK s’articule autour de trois repères documentés, de ses débuts à son enregistrement officiel.</p>
+            <Link className="mt-7 inline-flex items-center gap-2 text-sm font-bold text-[var(--bk-ciel)] transition hover:gap-3 hover:text-[var(--bk-marine)]" href="/notre-histoire">En savoir plus sur notre parcours <ArrowRight size={16} /></Link>
+          </div>
+          <ol className="relative grid gap-4 sm:grid-cols-3 sm:gap-5 sm:before:absolute sm:before:left-[12%] sm:before:right-[12%] sm:before:top-[25px] sm:before:h-px sm:before:bg-[rgba(11,90,155,0.18)]">
+            {[
+              ["24 juin 2024", "Début de l’organisation"],
+              ["26 septembre 2026", "Obtention des documents officiels"],
+              ["Octobre 2026", "Enregistrement au Journal officiel"],
+            ].map(([date, event], index) => (
+              <li className="relative rounded-[24px] border border-[rgba(16,36,61,0.08)] bg-white p-5 shadow-[0_14px_40px_rgba(16,36,61,0.06)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_22px_50px_rgba(16,36,61,0.1)] sm:p-6" key={date}>
+                <span aria-hidden="true" className="relative z-10 grid size-[50px] place-items-center rounded-2xl border border-[rgba(11,90,155,0.12)] bg-white font-display text-xs font-extrabold tracking-[0.12em] text-[var(--bk-ciel)] shadow-[0_4px_14px_rgba(16,36,61,0.06)]">0{index + 1}</span>
+                <time className="mt-7 block font-display text-lg font-bold leading-snug tracking-tight text-[var(--bk-marine)] sm:min-h-[52px]">{date}</time>
+                <span className="mt-4 block h-[2px] w-10 rounded-full bg-[var(--bk-rose)]" />
+                <p className="mt-4 text-sm leading-6 text-ink/65">{event}</p>
+              </li>
+            ))}
+          </ol>
         </div>
       </section>
 
@@ -213,7 +275,30 @@ export function HomePage({
             </div>
             <p className="max-w-[350px] pb-1 text-sm leading-6 text-ink/60">Nous agissons sur plusieurs leviers complémentaires pour accompagner les personnes et les territoires.</p>
           </div>
-          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-9 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {convictions.map((conviction, index) => {
+              const Icon = [HeartPulse, Sparkles, BookOpen, CheckCircle2, UsersRound, Leaf, School][index] ?? CheckCircle2;
+              return (
+                <Link className="group rounded-3xl border border-ink/[0.08] bg-white p-5 shadow-[0_8px_30px_rgba(16,36,61,0.04)] transition duration-300 hover:-translate-y-1 hover:shadow-soft sm:p-6" href={`/about/convictions/${conviction.number}`} key={conviction.number}>
+                  <div className="flex items-center justify-between">
+                    <span className="grid size-11 place-items-center rounded-2xl bg-[#edf3e8] text-forest"><Icon size={20} /></span>
+                    <span className="font-display text-xs font-bold tracking-[0.16em] text-ink/30">0{conviction.number}</span>
+                  </div>
+                  <h3 className="mt-5 font-display text-base font-bold leading-snug text-ink">{conviction.title}</h3>
+                  <p className="mt-2 text-xs leading-6 text-ink/60">{conviction.explanation}</p>
+                  <span className="mt-4 inline-flex items-center gap-2 text-xs font-bold text-forest group-hover:gap-3">Explorer <ArrowRight size={14} /></span>
+                </Link>
+              );
+            })}
+          </div>
+          <div className="mt-14 flex flex-col justify-between gap-4 border-t border-ink/10 pt-8 sm:flex-row sm:items-end">
+            <div>
+              <p className="section-eyebrow">Nos domaines d’intervention</p>
+              <h3 className="mt-3 font-display text-2xl font-bold tracking-tight text-ink">Des réponses complémentaires aux besoins des communautés.</h3>
+            </div>
+            <Link className="inline-flex items-center gap-2 text-sm font-bold text-forest" href="/domaines">Tous nos domaines <ArrowRight size={15} /></Link>
+          </div>
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {publishedDomains.map(({ icon: Icon, number, title, shortDescription, slug, coverImage }) => (
               <Card key={slug} className="group relative overflow-hidden p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-soft sm:p-7">
                 <div className="flex items-start justify-between">
@@ -243,60 +328,204 @@ export function HomePage({
       <section className="bg-[#f5f2e9] py-16 sm:py-20" id="galerie">
         <div className="mx-auto grid max-w-[1320px] gap-9 px-6 sm:px-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-center lg:px-12">
           <div>
-            <p className="section-eyebrow">Rejoignez le mouvement</p>
-            <h2 className="section-title mt-4">Les belles histoires se construisent à plusieurs.</h2>
-            <p className="mt-4 max-w-[490px] text-sm leading-7 text-ink/65">Envie d’agir ? Devenir membre commence par une candidature et une démarche d’adhésion. Chaque engagement compte.</p>
-            <Button asChild className="mt-7" size="lg" variant="forest"><Link href="/adhesion">Découvrir la procédure <ArrowRight size={16} /></Link></Button>
+            <p className="section-eyebrow">S’engager à nos côtés</p>
+            <h2 className="section-title mt-4">Pourquoi nous rejoindre&nbsp;?</h2>
+            <p className="mt-4 max-w-[490px] text-sm leading-7 text-ink/65">Rejoindre ONG BK, c’est choisir de mettre l’engagement collectif au service de la jeunesse et des communautés, dans le respect des besoins exprimés et des possibilités de chacun.</p>
+            <ul className="mt-6 grid gap-3 text-sm text-ink/75">
+              {[
+                "Prendre part à des initiatives solidaires et communautaires.",
+                "Partager ses compétences au service d’actions utiles.",
+                "Contribuer à des projets porteurs de sens, selon ses disponibilités.",
+              ].map((reason) => <li className="flex items-start gap-3" key={reason}><CheckCircle2 className="mt-0.5 shrink-0 text-[var(--bk-bleu-clair)]" size={17} />{reason}</li>)}
+            </ul>
+            <Button asChild className="mt-7" size="lg" variant="forest"><Link href="/adhesion">Découvrir les modalités d’engagement <ArrowRight size={16} /></Link></Button>
           </div>
-          <div className="grid grid-cols-2 gap-3 sm:gap-4">
-            <div className="relative col-span-2 h-[190px] overflow-hidden rounded-3xl sm:h-[245px]">
-              <Image alt="Des enfants participent à une activité éducative" className="object-cover" fill sizes="(max-width: 1024px) 90vw, 50vw" src="/images/action-education.jpg" />
-              <div className="absolute inset-0 bg-gradient-to-t from-ink/50 to-transparent" />
-              <p className="absolute bottom-4 left-5 text-sm font-semibold text-white">Apprendre et s’épanouir</p>
-            </div>
-            <div className="relative h-[150px] overflow-hidden rounded-3xl sm:h-[190px]">
-              <Image alt="Distribution de dons aux enfants par les équipes de ONG BK" className="object-cover" fill sizes="(max-width: 1024px) 45vw, 25vw" src="/images/action-solidarite.jpg" />
-            </div>
-            <div className="relative h-[150px] overflow-hidden rounded-3xl sm:h-[190px]">
-              <Image alt="Enfants et membres réunis lors d'une action communautaire" className="object-cover" fill sizes="(max-width: 1024px) 45vw, 25vw" src="/images/action-communaute.jpg" />
-            </div>
-          </div>
+          <HomeJoinGallery />
         </div>
       </section>
 
-      <section className="mx-auto max-w-[1320px] px-6 py-20 sm:px-10 lg:px-12 lg:py-24" id="actualites">
-        <div className="rounded-[32px] bg-forest px-7 py-10 text-white sm:px-12 sm:py-12 lg:flex lg:items-center lg:justify-between lg:px-16">
-          <div className="max-w-[650px]">
-            <p className="text-[10px] font-bold uppercase tracking-[0.17em] text-white/65">Actualités & opportunités</p>
-            <h2 className="mt-4 font-display text-3xl font-extrabold leading-tight tracking-[-0.045em] sm:text-4xl">Vous souhaitez soutenir nos prochaines actions ?</h2>
-            <p className="mt-4 max-w-[560px] text-sm leading-6 text-white/75">Devenez partenaire, proposez un projet ou rejoignez notre communauté de bénévoles.</p>
+      <section className="bg-white py-20 sm:py-24" id="actualites">
+        <div className="mx-auto max-w-[1320px] px-6 sm:px-10 lg:px-12">
+          <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
+            <div>
+              <p className="section-eyebrow">La vie de l’organisation</p>
+              <h2 className="section-title mt-3">Actualités</h2>
+            </div>
+            <Link className="inline-flex items-center gap-2 text-sm font-bold text-forest" href="/actualites">Toutes les actualités <ArrowRight size={15} /></Link>
           </div>
-          <div className="mt-7 flex shrink-0 flex-wrap gap-3 lg:ml-8 lg:mt-0">
-            <Button asChild><Link href="#partenaires">Devenir partenaire <ArrowRight size={15} /></Link></Button>
-            <Button asChild variant="outline"><Link href="/adhesion">Nous rejoindre</Link></Button>
-          </div>
+          {newsUnavailable ? (
+            <p className="mt-8 rounded-3xl border border-ink/10 bg-[#fbfaf7] p-6 text-sm leading-6 text-ink/60">Les actualités publiées ne sont pas disponibles pour le moment. Consultez la page Actualités ultérieurement.</p>
+          ) : news.length > 0 ? (
+            <div className="mt-9 grid gap-5 lg:grid-cols-[1.15fr_0.85fr]">
+              {news.slice(0, 1).map((item) => (
+                <article className="overflow-hidden rounded-[28px] border border-ink/10 bg-white shadow-[0_14px_50px_rgba(16,36,61,0.07)]" key={item.slug}>
+                  <Link className="group grid h-full md:grid-cols-[1fr_0.9fr]" href={`/actualites/${item.slug}`}>
+                    <div className="relative min-h-[230px] bg-[#edf3e8] md:min-h-[370px]">
+                      {item.coverMediaId ? <Image alt={item.coverMediaAlt || item.title} className="object-cover transition duration-500 group-hover:scale-[1.025]" fill sizes="(max-width: 768px) 100vw, 50vw" src={`/api/media/${item.coverMediaId}`} /> : <div className="grid h-full min-h-[230px] place-items-center text-forest/60"><Newspaper size={48} strokeWidth={1.2} /></div>}
+                    </div>
+                    <div className="flex flex-col justify-center p-6 sm:p-8">
+                      <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-[var(--bk-bleu-clair)]">{item.category || "Actualité"}</span>
+                      <h3 className="mt-4 font-display text-xl font-bold leading-snug text-ink sm:text-2xl">{item.title}</h3>
+                      <p className="mt-3 text-sm leading-6 text-ink/60">{item.summary}</p>
+                      <time className="mt-5 inline-flex items-center gap-2 text-xs font-medium text-ink/50" dateTime={item.publishedAt}><CalendarDays size={14} />{formatHomeDate(item.publishedAt)}</time>
+                      <span className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-forest">Lire l’actualité <ArrowRight size={15} /></span>
+                    </div>
+                  </Link>
+                </article>
+              ))}
+              <div className="grid gap-4">
+                {news.slice(1, 4).map((item) => (
+                  <article className="rounded-3xl border border-ink/10 bg-[#fbfaf7] p-5 transition hover:-translate-y-0.5 hover:shadow-soft sm:p-6" key={item.slug}>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-[var(--bk-bleu-clair)]">{item.category || "Actualité"}</p>
+                    <h3 className="mt-3 font-display text-lg font-bold leading-snug text-ink">{item.title}</h3>
+                    <p className="mt-2 line-clamp-2 text-sm leading-6 text-ink/60">{item.summary}</p>
+                    <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+                      <time className="inline-flex items-center gap-2 text-xs text-ink/50" dateTime={item.publishedAt}><CalendarDays size={14} />{formatHomeDate(item.publishedAt)}</time>
+                      <Link className="inline-flex items-center gap-1 text-xs font-bold text-forest" href={`/actualites/${item.slug}`}>Lire <ArrowRight size={14} /></Link>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div className="mt-8 rounded-[28px] border border-dashed border-ink/15 bg-[#fbfaf7] px-6 py-12 text-center">
+              <Newspaper className="mx-auto text-forest/55" size={30} strokeWidth={1.5} />
+              <h3 className="mt-4 font-display text-lg font-bold text-ink">Aucune actualité publiée pour le moment</h3>
+              <p className="mx-auto mt-2 max-w-lg text-sm leading-6 text-ink/60">Les nouvelles seront affichées ici dès leur publication officielle.</p>
+              <Link className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-forest" href="/actualites">Visiter la page Actualités <ArrowRight size={15} /></Link>
+            </div>
+          )}
         </div>
       </section>
 
-      <section className="border-y border-ink/[0.06] bg-[#fbfaf7] py-12" id="partenaires">
-        <div className="mx-auto flex max-w-[1320px] flex-col items-center justify-between gap-7 px-6 text-center sm:px-10 lg:flex-row lg:px-12 lg:text-left">
+      <section className="bg-[#f5f7f5] py-20 sm:py-24" id="projets">
+        <div className="mx-auto max-w-[1320px] px-6 sm:px-10 lg:px-12">
+          <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
+            <div>
+              <p className="section-eyebrow">Initiatives en cours</p>
+              <h2 className="section-title mt-3">Projets</h2>
+            </div>
+            <Link className="inline-flex items-center gap-2 text-sm font-bold text-forest" href="/actions#projets">Projets en cours <ArrowRight size={15} /></Link>
+          </div>
+          {projectsUnavailable ? (
+            <p className="mt-8 rounded-3xl border border-ink/10 bg-white p-6 text-sm leading-6 text-ink/60">Les informations sur les projets ne sont pas disponibles pour le moment.</p>
+          ) : projects.length > 0 ? (
+            <div className="mt-9 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+              {projects.map((project) => (
+                <article className="overflow-hidden rounded-[26px] border border-ink/10 bg-white shadow-[0_12px_40px_rgba(16,36,61,0.06)]" key={project.slug}>
+                  <div className="relative h-[210px] bg-[#e8eee9]">
+                    {project.coverMediaId ? <Image alt={project.coverMediaAlt || project.title} className="object-cover" fill sizes="(max-width: 1024px) 100vw, 33vw" src={`/api/media/${project.coverMediaId}`} /> : <div className="grid h-full place-items-center text-forest/50"><BriefcaseBusiness size={42} strokeWidth={1.3} /></div>}
+                  </div>
+                  <div className="p-6">
+                    <span className="inline-flex items-center gap-2 rounded-full bg-[#edf3e8] px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide text-forest"><span className="size-1.5 rounded-full bg-forest" />En cours</span>
+                    <h3 className="mt-4 font-display text-lg font-bold leading-snug text-ink">{project.title}</h3>
+                    <p className="mt-2 line-clamp-3 text-sm leading-6 text-ink/60">{project.description}</p>
+                    <p className="mt-4 text-xs font-semibold text-ink/50">{project.domain}</p>
+                    {project.startDate && <p className="mt-2 text-xs text-ink/50">Période : {formatHomeDate(project.startDate)}{project.endDate ? ` au ${formatHomeDate(project.endDate)}` : ""}</p>}
+                    <Link className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-forest" href="/actions#projets">Voir les informations disponibles <ArrowRight size={15} /></Link>
+                  </div>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <div className="mt-8 rounded-[28px] border border-dashed border-ink/15 bg-white px-6 py-12 text-center">
+              <BriefcaseBusiness className="mx-auto text-forest/55" size={30} strokeWidth={1.5} />
+              <h3 className="mt-4 font-display text-lg font-bold text-ink">Aucun projet en cours publié</h3>
+              <p className="mx-auto mt-2 max-w-lg text-sm leading-6 text-ink/60">Cette section présente uniquement les projets actuellement publiés par l’ONG BK.</p>
+              <Link className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-forest" href="/actions#projets">Consulter la page Projets en cours <ArrowRight size={15} /></Link>
+            </div>
+          )}
+        </div>
+      </section>
+
+      <section className="bg-white py-20 sm:py-24" id="opportunites">
+        <div className="mx-auto max-w-[1320px] px-6 sm:px-10 lg:px-12">
+          <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
+            <div>
+              <p className="section-eyebrow">Participer aux initiatives</p>
+              <h2 className="section-title mt-3">Opportunités</h2>
+            </div>
+            <Button asChild size="lg" variant="forest"><Link href="/actions#candidatures">Découvrir les opportunités <ArrowRight size={16} /></Link></Button>
+          </div>
+          {opportunitiesUnavailable ? (
+            <p className="mt-8 rounded-3xl border border-ink/10 bg-[#fbfaf7] p-6 text-sm leading-6 text-ink/60">Les opportunités publiées ne sont pas disponibles pour le moment. Consultez la page Projets en cours ultérieurement.</p>
+          ) : opportunities.length > 0 ? (
+            <div className="mt-8 grid gap-4 md:grid-cols-2">
+              {opportunities.map((opportunity) => (
+                <article className="rounded-3xl border border-ink/10 bg-[#fbfaf7] p-6 sm:p-7" key={opportunity.slug}>
+                  <div className="flex items-start justify-between gap-4">
+                    <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-[#edf3e8] text-forest"><UsersRound size={20} /></span>
+                    <span className="rounded-full bg-white px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide text-forest">{opportunity.category || "Opportunité"}</span>
+                  </div>
+                  <h3 className="mt-5 font-display text-lg font-bold leading-snug text-ink">{opportunity.title}</h3>
+                  <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-ink/45">{opportunity.type === "VOLUNTEER_CALL" ? "Appel à bénévolat" : opportunity.type === "TRAINING_CALL" ? "Appel à formation" : "Appel à projets"}</p>
+                  <p className="mt-2 text-sm leading-6 text-ink/60">{opportunity.summary}</p>
+                  <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-xs text-ink/50">
+                    {opportunity.publishedAt && <span className="inline-flex items-center gap-2"><CalendarDays size={14} />Publié le {formatHomeDate(opportunity.publishedAt)}</span>}
+                    {opportunity.applicationPeriod && <span>Candidatures : {formatHomeDate(opportunity.applicationPeriod.start)} au {formatHomeDate(opportunity.applicationPeriod.end)}</span>}
+                  </div>
+                  <Link className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-forest" href={`/actions/offres/${opportunity.slug}`}>Consulter l’opportunité <ArrowRight size={15} /></Link>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <div className="mt-8 rounded-[28px] border border-dashed border-ink/15 bg-[#fbfaf7] px-6 py-12 text-center">
+              <CalendarDays className="mx-auto text-forest/55" size={30} strokeWidth={1.5} />
+              <h3 className="mt-4 font-display text-lg font-bold text-ink">Aucune opportunité publiée actuellement</h3>
+              <p className="mx-auto mt-2 max-w-lg text-sm leading-6 text-ink/60">Les appels et candidatures seront affichés ici dès leur publication.</p>
+              <Link className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-forest" href="/actions#candidatures">Consulter les projets en cours <ArrowRight size={15} /></Link>
+            </div>
+          )}
+        </div>
+      </section>
+
+      <section className="relative overflow-hidden bg-[#f5f2e9] py-16 sm:py-20" id="nous-rejoindre">
+        <div className="mx-auto grid max-w-[1320px] gap-9 px-6 sm:px-10 lg:grid-cols-[1fr_1.1fr] lg:items-center lg:px-12">
           <div>
-            <p className="section-eyebrow">Construire ensemble</p>
-            <h2 className="mt-2 font-display text-xl font-bold">Partenaires & soutiens</h2>
+            <p className="section-eyebrow">Passer à l’action</p>
+            <h2 className="section-title mt-4">Nous rejoindre</h2>
+            <p className="mt-4 max-w-[520px] text-sm leading-7 text-ink/65">Vous souhaitez vous engager auprès de l’ONG BK&nbsp;? Découvrez la démarche d’adhésion et les modalités de candidature présentées par l’organisation.</p>
+            <Button asChild className="mt-7" size="lg" variant="forest"><Link href="/adhesion">Découvrir la démarche d’adhésion <ArrowRight size={16} /></Link></Button>
           </div>
-          <p className="max-w-[530px] text-sm leading-6 text-ink/60">Les collaborations avec les institutions, associations et acteurs engagés renforcent l’impact de nos initiatives.</p>
-          <Link className="inline-flex shrink-0 items-center gap-2 text-sm font-bold text-forest" href="#contact">Parlons partenariat <ArrowUpRight size={15} /></Link>
+          <div className="relative min-h-[260px] overflow-hidden rounded-[28px] shadow-[0_22px_60px_rgba(16,36,61,0.12)] sm:min-h-[340px]">
+            <Image alt="Des jeunes réunis dans le cadre d’une activité éducative" className="object-cover" fill sizes="(max-width: 1024px) 100vw, 55vw" src="/images/action-education.jpg" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#10243d]/45 to-transparent" />
+          </div>
         </div>
       </section>
 
-      <section className="bg-[#f5f2e9] py-14" id="donate">
-        <div className="mx-auto flex max-w-[1320px] flex-col gap-5 px-6 sm:px-10 md:flex-row md:items-center md:justify-between lg:px-12">
+      <section className="relative overflow-hidden bg-[#10243d] py-20 text-white sm:py-24" id="partenaires">
+        <div aria-hidden="true" className="absolute -right-24 -top-36 size-[440px] rounded-full border border-white/[0.08]" />
+        <div className="relative mx-auto grid max-w-[1320px] gap-10 px-6 sm:px-10 lg:grid-cols-[1fr_0.9fr] lg:items-center lg:px-12">
           <div>
+            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#f1cf75]">Construire ensemble</p>
+            <h2 className="mt-4 max-w-2xl font-display text-3xl font-bold leading-tight tracking-[-0.04em] sm:text-4xl">Les collaborations donnent plus de portée aux initiatives.</h2>
+            <p className="mt-5 max-w-xl text-sm leading-7 text-white/70">ONG BK souhaite développer des relations de confiance avec les institutions, les associations, les entreprises et les personnes qui partagent son engagement. Les modalités de collaboration se construisent avec l’équipe.</p>
+            <Button asChild className="mt-7" size="lg"><Link href="/partenaires#contact">Parlons partenariat <ArrowUpRight size={16} /></Link></Button>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+            {[
+              { icon: Landmark, title: "Institutions", description: "Mettre en dialogue les priorités et les besoins des communautés." },
+              { icon: Handshake, title: "Expertises", description: "Partager des compétences utiles aux initiatives." },
+              { icon: HeartHandshake, title: "Engagements solidaires", description: "Faire émerger des collaborations responsables." },
+            ].map(({ icon: Icon, title, description }) => (
+              <div className="flex items-start gap-4 rounded-2xl border border-white/10 bg-white/[0.05] p-5" key={title}>
+                <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-white/10 text-[#f1cf75]"><Icon size={19} /></span>
+                <div><h3 className="font-display text-sm font-bold">{title}</h3><p className="mt-1 text-xs leading-5 text-white/60">{description}</p></div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-[#f5f2e9] py-16 sm:py-20" id="donate">
+        <div className="mx-auto flex max-w-[1320px] flex-col gap-6 px-6 sm:px-10 md:flex-row md:items-center md:justify-between lg:px-12">
+          <div className="max-w-3xl">
             <p className="section-eyebrow">Soutenir nos actions</p>
-            <h2 className="mt-2 font-display text-2xl font-bold">Votre soutien contribue à faire grandir nos initiatives.</h2>
-            <p className="mt-2 text-sm text-ink/60">Les modalités de don seront communiquées par l’équipe ONG BK.</p>
+            <h2 className="mt-3 font-display text-2xl font-bold leading-tight text-ink sm:text-3xl">Chaque forme de soutien commence par un échange.</h2>
+            <p className="mt-3 text-sm leading-6 text-ink/60">Pour connaître les possibilités de soutien et leurs modalités, prenez contact avec l’équipe de l’ONG BK.</p>
           </div>
-          <Button asChild size="lg"><Link href="/contact">Nous contacter pour soutenir ONG BK <ArrowRight size={16} /></Link></Button>
+          <Button asChild size="lg" variant="forest"><Link href="/contact">Nous contacter <ArrowRight size={16} /></Link></Button>
         </div>
       </section>
 

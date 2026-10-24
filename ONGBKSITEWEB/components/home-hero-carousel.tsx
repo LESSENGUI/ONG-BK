@@ -32,15 +32,17 @@ export function HomeHeroCarousel() {
           <Image
             alt={item.alt}
             aria-hidden="true"
-            className={`object-cover transition-opacity duration-1000 motion-reduce:transition-none ${index === active ? "opacity-100" : "opacity-0"}`}
+            className={`object-cover object-center transition-opacity duration-1000 motion-reduce:transition-none ${index === active ? "opacity-100" : "opacity-0"}`}
             fill
             key={item.src}
             priority={index === 0}
+            loading={index === 0 ? undefined : index < 3 ? "eager" : "lazy"}
+            quality={90}
             sizes="100vw"
             src={item.src}
           />
         ))}
-        <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(90deg,rgba(247,247,247,0.6),rgba(247,247,247,0.72)_48%,rgba(247,247,247,0.48)),linear-gradient(0deg,rgba(11,90,155,0.13),transparent_34%)]" />
+        <div aria-hidden="true" className="home-hero-overlay absolute inset-0" />
       </div>
       <span aria-live="polite" className="absolute left-5 top-5 z-10 rounded-full border border-white/60 bg-white/70 px-3 py-2 text-[10px] font-semibold tracking-wide text-[var(--bk-marine)] shadow-sm backdrop-blur-sm sm:left-8 sm:top-7 sm:text-xs">{slide.label}</span>
       <button
