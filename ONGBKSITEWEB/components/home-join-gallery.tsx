@@ -1,8 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, Pause, Play } from "lucide-react";
+import { useLowPower } from "@/lib/motion";
 
 const photos = [
   {
@@ -38,26 +39,33 @@ const photos = [
 ];
 
 export function HomeJoinGallery() {
+  const galleryRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const [hovered, setHovered] = useState(false);
   const [focused, setFocused] = useState(false);
+  const lowPower = useLowPower();
 
   useEffect(() => {
-    if (
-      paused ||
-      hovered ||
-      focused ||
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    ) {
-      return;
-    }
+    if (lowPower !== false || paused || hovered || focused) return;
+
+    const gallery = galleryRef.current;
+    if (!gallery) return;
+    let isVisible = false;
+    const observer = "IntersectionObserver" in window
+      ? new IntersectionObserver(([entry]) => { isVisible = entry.isIntersecting; }, { threshold: 0.01 })
+      : null;
+    observer?.observe(gallery);
+    if (!observer) isVisible = true;
 
     const timer = window.setInterval(() => {
-      setActiveIndex((current) => (current + 1) % photos.length);
+      if (isVisible) setActiveIndex((current) => (current + 1) % photos.length);
     }, 6500);
-    return () => window.clearInterval(timer);
-  }, [focused, hovered, paused]);
+    return () => {
+      window.clearInterval(timer);
+      observer?.disconnect();
+    };
+  }, [focused, hovered, lowPower, paused]);
 
   const showPhoto = (offset: number) =>
     photos[(activeIndex + offset) % photos.length];
@@ -67,6 +75,7 @@ export function HomeJoinGallery() {
       aria-label="Photos des activités de l’ONG BK"
       aria-roledescription="carrousel"
       className="min-w-0"
+      ref={galleryRef}
       onBlur={(event) => {
         if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
           setFocused(false);

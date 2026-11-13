@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, MapPin, Pause, Play } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import { useLowPower } from "@/lib/motion";
 
 export type HomeActivity = {
   slug: string;
@@ -25,20 +26,32 @@ export function HomeActivitiesCarousel({
 }) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [paused, setPaused] = useState(false);
+  const lowPower = useLowPower();
   const scroll = (direction: -1 | 1) => {
     trackRef.current?.scrollBy({ left: direction * 360, behavior: "smooth" });
   };
 
   useEffect(() => {
-    if (activities.length < 2 || paused || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (activities.length < 2 || paused || lowPower !== false) return;
     const timer = window.setInterval(() => {
       const track = trackRef.current;
-      if (!track) return;
+      if (!track || !isVisible) return;
       const atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 16;
       track.scrollTo({ left: atEnd ? 0 : track.scrollLeft + 360, behavior: "smooth" });
     }, 6000);
-    return () => window.clearInterval(timer);
-  }, [activities.length, paused]);
+    const track = trackRef.current;
+    let isVisible = false;
+    const observer = track && "IntersectionObserver" in window
+      ? new IntersectionObserver(([entry]) => { isVisible = entry.isIntersecting; }, { threshold: 0.01 })
+      : null;
+    if (track) observer?.observe(track);
+    if (!observer) isVisible = true;
+
+    return () => {
+      window.clearInterval(timer);
+      observer?.disconnect();
+    };
+  }, [activities.length, lowPower, paused]);
 
   if (activities.length === 0) {
     return (

@@ -65,11 +65,11 @@ test("les engagements complémentaires et les organes conservent leurs liens de 
 
 test("la page d’accueil présente exactement six cartes de chiffres", () => {
   assert.equal(impactCards.length, 6);
-  const allMetrics = impactCards
-    .flatMap(({ figure, label, details }) => [figure, label, ...details])
-    .join(" ");
-  for (const figure of ["2 300", "800", "120", "10 000", "5 000", "3 000", "50", "15", "20", "100", "30", "500", "1 000", "300", "400", "250", "600", "200", "150", "80 %", "90 %"]) {
-    assert.ok(allMetrics.includes(figure), `Le chiffre ${figure} doit être conservé.`);
+  assert.deepEqual(impactCards.map(({ figure }) => figure), ["130", "90", "100", "50", "50", "5"]);
+
+  const relatedIndicators = impactCards.flatMap(({ details }) => details).join(" ");
+  for (const figure of ["120", "5 000", "3 000", "15", "30", "500", "1 000", "300", "250", "600", "200", "150", "80 %", "90 %"]) {
+    assert.ok(relatedIndicators.includes(figure), `L’indicateur associé ${figure} doit être conservé.`);
   }
 });
 

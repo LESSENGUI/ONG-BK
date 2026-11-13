@@ -23,6 +23,7 @@ import { publishedDomains } from "@/lib/domains";
 import { HomeHeroCarousel } from "@/components/home-hero-carousel";
 import { HomeActivitiesCarousel, type HomeActivity } from "@/components/home-activities-carousel";
 import { HomeJoinGallery } from "@/components/home-join-gallery";
+import { ImpactCounter } from "@/components/impact-counter";
 import { convictions } from "@/lib/about-preamble";
 
 export type HomeNews = {
@@ -57,28 +58,35 @@ export type HomeOpportunity = {
   applicationPeriod: { start: string; end: string } | null;
 };
 
+export type HomePartner = {
+  id: string;
+  name: string;
+  logoSrc: string;
+  website: string | null;
+};
+
 export const impactCards = [
   {
     title: "Apprendre et réussir",
-    figure: "2 300",
+    figure: "130",
     label: "enfants scolarisés",
     details: ["5 000 kits scolaires distribués", "1 000 personnes sensibilisées aux droits de l’enfant", "600 heures de soutien scolaire", "80 % de réussite aux examens des élèves soutenus"],
   },
   {
     title: "Se former et entreprendre",
-    figure: "800",
+    figure: "90",
     label: "jeunes formés professionnellement",
     details: ["120 microentreprises accompagnées", "300 femmes soutenues dans leur autonomie économique"],
   },
   {
     title: "Renforcer la solidarité",
-    figure: "10 000",
+    figure: "100",
     label: "bénéficiaires directs en 2024",
     details: ["3 000 repas distribués", "200 familles accompagnées", "150 enfants orphelins soutenus"],
   },
   {
     title: "Agir pour le bien-être",
-    figure: "400",
+    figure: "50",
     label: "consultations médicales gratuites",
     details: ["15 campagnes de sensibilisation", "30 événements communautaires"],
   },
@@ -90,7 +98,7 @@ export const impactCards = [
   },
   {
     title: "Mobiliser les communautés",
-    figure: "20",
+    figure: "5",
     label: "partenariats locaux et internationaux",
     details: ["100 bénévoles mobilisés", "250 jeunes engagés dans le volontariat", "90 % de satisfaction des bénéficiaires"],
   },
@@ -108,6 +116,8 @@ export function HomePage({
   projectsUnavailable = false,
   opportunities = [],
   opportunitiesUnavailable = false,
+  partners = [],
+  partnersUnavailable = false,
 }: {
   activities: HomeActivity[];
   activitiesUnavailable?: boolean;
@@ -117,11 +127,16 @@ export function HomePage({
   projectsUnavailable?: boolean;
   opportunities?: HomeOpportunity[];
   opportunitiesUnavailable?: boolean;
+  partners?: HomePartner[];
+  partnersUnavailable?: boolean;
 }) {
   return (
-    <main>
+    <main className="home-page">
       <section className="home-hero relative isolate flex min-h-[690px] flex-col overflow-hidden bg-[#193b4b] sm:min-h-[660px] lg:min-h-[640px]">
         <HomeHeroCarousel />
+        <span aria-hidden="true" className="hero-decor hero-decor-one" />
+        <span aria-hidden="true" className="hero-decor hero-decor-two" />
+        <span aria-hidden="true" className="hero-decor hero-decor-three" />
         <div className="relative z-10 mx-auto flex w-full max-w-[1440px] flex-1 flex-col px-5 pb-5 pt-24 sm:px-9 sm:pb-7 sm:pt-28 lg:px-12">
           <div className="home-copy-enter flex flex-1 items-center justify-center py-8 text-center">
             <div className="max-w-[850px]">
@@ -183,7 +198,7 @@ export function HomePage({
                     <p className="text-[10px] font-bold uppercase leading-4 tracking-[0.12em] text-ink/50">{card.title}</p>
                   </div>
                   <div className="mt-4 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                    <p className="font-display text-[1.75rem] font-extrabold leading-none tracking-[-0.04em] text-[var(--bk-marine)] sm:text-3xl">{card.figure}</p>
+                    <ImpactCounter className="font-display text-[1.75rem] font-extrabold leading-none tracking-[-0.04em] text-[var(--bk-marine)] sm:text-3xl" value={card.figure} />
                     <p className="text-xs font-semibold leading-5 text-[var(--bk-bleu-clair)]">{card.label}</p>
                   </div>
                   <details className="mt-4 border-t border-[rgba(11,90,155,0.09)] pt-3">
@@ -230,8 +245,8 @@ export function HomePage({
               Découvrir l’ONG BK <ArrowRight size={16} />
             </Link>
           </div>
-          <div className="relative min-h-[300px] overflow-hidden rounded-[30px] bg-[#dce7df] shadow-[0_24px_70px_rgba(16,36,61,0.13)] sm:min-h-[390px]">
-            <Image alt="Des membres de la communauté réunis autour d’une activité collective" className="object-cover" fill sizes="(max-width: 1024px) 100vw, 55vw" src="/images/action-communaute.jpg" />
+          <div className="group relative min-h-[300px] overflow-hidden rounded-[30px] bg-[#dce7df] shadow-[0_24px_70px_rgba(16,36,61,0.13)] sm:min-h-[390px]">
+            <Image alt="Des membres de la communauté réunis autour d’une activité collective" className="object-cover transition-transform duration-700 group-hover:scale-[1.035]" fill sizes="(max-width: 1024px) 100vw, 55vw" src="/images/action-communaute.jpg" />
             <div className="absolute inset-0 bg-gradient-to-t from-[#10243d]/65 via-transparent to-transparent" />
             <p className="absolute bottom-6 left-6 max-w-sm font-display text-xl font-bold leading-snug text-white sm:bottom-8 sm:left-8 sm:text-2xl">
               Agir avec les communautés, au plus près de leurs réalités.
@@ -412,9 +427,9 @@ export function HomePage({
           ) : projects.length > 0 ? (
             <div className="mt-9 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
               {projects.map((project) => (
-                <article className="overflow-hidden rounded-[26px] border border-ink/10 bg-white shadow-[0_12px_40px_rgba(16,36,61,0.06)]" key={project.slug}>
+                <article className="group overflow-hidden rounded-[26px] border border-ink/10 bg-white shadow-[0_12px_40px_rgba(16,36,61,0.06)]" key={project.slug}>
                   <div className="relative h-[210px] bg-[#e8eee9]">
-                    {project.coverMediaId ? <Image alt={project.coverMediaAlt || project.title} className="object-cover" fill sizes="(max-width: 1024px) 100vw, 33vw" src={`/api/media/${project.coverMediaId}`} /> : <div className="grid h-full place-items-center text-forest/50"><BriefcaseBusiness size={42} strokeWidth={1.3} /></div>}
+                    {project.coverMediaId ? <Image alt={project.coverMediaAlt || project.title} className="object-cover transition-transform duration-700 group-hover:scale-[1.035]" fill sizes="(max-width: 1024px) 100vw, 33vw" src={`/api/media/${project.coverMediaId}`} /> : <div className="grid h-full place-items-center text-forest/50"><BriefcaseBusiness size={42} strokeWidth={1.3} /></div>}
                   </div>
                   <div className="p-6">
                     <span className="inline-flex items-center gap-2 rounded-full bg-[#edf3e8] px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide text-forest"><span className="size-1.5 rounded-full bg-forest" />En cours</span>
@@ -491,6 +506,54 @@ export function HomePage({
             <Image alt="Des jeunes réunis dans le cadre d’une activité éducative" className="object-cover" fill sizes="(max-width: 1024px) 100vw, 55vw" src="/images/action-education.jpg" />
             <div className="absolute inset-0 bg-gradient-to-t from-[#10243d]/45 to-transparent" />
           </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="home-partners-title" className="home-partners-section" id="nos-partenaires">
+        <div className="mx-auto max-w-[1320px] px-5 py-16 sm:px-10 sm:py-20 lg:px-12">
+          <div className="mx-auto max-w-[760px] text-center">
+            <p className="section-eyebrow">Coopération et solidarité</p>
+            <h2 className="section-title mt-3" id="home-partners-title">Nos partenaires</h2>
+            <p className="mx-auto mt-4 max-w-[660px] text-sm leading-7 text-ink/65 sm:text-[15px]">
+              Cette vitrine présente les partenaires actifs dont la publication a été validée par l’ONG-BK. Lorsqu’un site officiel est renseigné, leur logo permet d’y accéder.
+            </p>
+          </div>
+          {partnersUnavailable ? (
+            <p className="home-partners-empty mt-9">
+              Les partenaires confirmés ne sont pas disponibles pour le moment. Veuillez réessayer ultérieurement.
+            </p>
+          ) : partners.length > 0 ? (
+            <ul className="home-partners-grid mt-10">
+              {partners.map((partner) => {
+                const content = (
+                  <>
+                    <span className="home-partner-logo-frame">
+                      <Image alt="" className="object-contain" fill sizes="(max-width: 640px) 140px, 180px" src={partner.logoSrc} unoptimized />
+                    </span>
+                    <span className="home-partner-name">{partner.name}</span>
+                  </>
+                );
+
+                return (
+                  <li key={partner.id}>
+                    <article className="home-partner-card">
+                      {partner.website ? (
+                        <a href={partner.website} rel="noopener noreferrer" target="_blank">
+                          {content}
+                        </a>
+                      ) : (
+                        <div>{content}</div>
+                      )}
+                    </article>
+                  </li>
+                );
+              })}
+            </ul>
+          ) : (
+            <p className="home-partners-empty mt-9">
+              Aucun logo de partenaire officiellement confirmé n’est actuellement publié.
+            </p>
+          )}
         </div>
       </section>
 

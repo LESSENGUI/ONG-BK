@@ -75,7 +75,8 @@ export function ExecutiveBoardProfiles() {
         <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {members.map((member) => (
             <li
-              className="group overflow-hidden rounded-[26px] border border-[rgba(11,90,155,0.09)] bg-white shadow-[0_16px_42px_-34px_rgba(11,47,78,0.45)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_50px_-32px_rgba(11,47,78,0.4)]"
+              className="executive-board-member group overflow-hidden rounded-[26px] border border-[rgba(11,90,155,0.09)] bg-white shadow-[0_16px_42px_-34px_rgba(11,47,78,0.45)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_50px_-32px_rgba(11,47,78,0.4)]"
+              data-reveal
               key={member.id}
             >
               <div className="relative h-[290px] overflow-hidden bg-[linear-gradient(145deg,#0B5A9B,#19A7E6)] sm:h-[320px]">
@@ -130,7 +131,7 @@ export function ExecutiveBoardProfiles() {
 
       <dialog
         aria-labelledby={headingId}
-        className="m-auto w-[min(92vw,760px)] max-w-none overflow-hidden rounded-[30px] border border-white/70 bg-[#fffdfa] p-0 text-ink shadow-[0_36px_110px_rgba(5,28,52,0.35)] backdrop:bg-[rgba(5,28,52,0.65)] backdrop:backdrop-blur-md"
+        className="executive-board-dialog m-auto w-[min(92vw,760px)] max-w-none overflow-hidden rounded-[30px] border border-white/70 bg-[#fffdfa] p-0 text-ink shadow-[0_36px_110px_rgba(5,28,52,0.35)] backdrop:bg-[rgba(5,28,52,0.65)] backdrop:backdrop-blur-md"
         onClick={(event) => {
           if (event.target === event.currentTarget) setSelectedMemberId(null);
         }}

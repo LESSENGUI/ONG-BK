@@ -1,8 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useLowPower } from "@/lib/motion";
 
 const slides = [
   { src: "/images/hero-accueil.jpg", alt: "", label: "Au service des communautés, chaque jour." },
@@ -14,30 +15,47 @@ const slides = [
 
 export function HomeHeroCarousel() {
   const [active, setActive] = useState(0);
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const lowPower = useLowPower();
 
   useEffect(() => {
-    const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (motionPreference.matches) return;
-    const timer = window.setInterval(() => setActive((index) => (index + 1) % slides.length), 5000);
-    return () => window.clearInterval(timer);
-  }, []);
+    if (lowPower !== false) return;
+    const carousel = carouselRef.current;
+    if (!carousel) return;
+
+    let isVisible = false;
+    const observer = "IntersectionObserver" in window
+      ? new IntersectionObserver(([entry]) => { isVisible = entry.isIntersecting; }, { threshold: 0.01 })
+      : null;
+    observer?.observe(carousel);
+    if (!observer) isVisible = true;
+
+    const timer = window.setInterval(() => {
+      if (isVisible) setActive((index) => (index + 1) % slides.length);
+    }, 5000);
+
+    return () => {
+      window.clearInterval(timer);
+      observer?.disconnect();
+    };
+  }, [lowPower]);
 
   const showSlide = (index: number) => setActive((index + slides.length) % slides.length);
   const slide = slides[active];
 
   return (
-    <div aria-label="Images illustrant les engagements de l’ONG BK" aria-roledescription="carrousel" className="absolute inset-0" role="region">
+    <div aria-label="Images illustrant les engagements de l’ONG BK" aria-roledescription="carrousel" className="absolute inset-0" ref={carouselRef} role="region">
       <div className="absolute inset-0 overflow-hidden">
         {slides.map((item, index) => (
           <Image
             alt={item.alt}
             aria-hidden="true"
-            className={`object-cover object-center transition-opacity duration-1000 motion-reduce:transition-none ${index === active ? "opacity-100" : "opacity-0"}`}
+            className={`hero-slide-image object-cover object-center ${index === active ? "is-active opacity-100" : "opacity-0"}`}
             fill
             key={item.src}
             priority={index === 0}
-            loading={index === 0 ? undefined : index < 3 ? "eager" : "lazy"}
-            quality={90}
+            loading={index < 2 ? undefined : "lazy"}
+            quality={82}
             sizes="100vw"
             src={item.src}
           />

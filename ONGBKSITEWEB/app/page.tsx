@@ -1,15 +1,41 @@
-import { HomePage, type HomeNews, type HomeOpportunity, type HomeProject } from "@/components/home-page";
+import { HomePage, type HomeNews, type HomeOpportunity, type HomePartner, type HomeProject } from "@/components/home-page";
 import { db } from "@/lib/db";
 import { getDomainBySlug } from "@/lib/domains";
 import { getApplicationPeriod, languageTrainingOpportunity } from "@/lib/public-articles";
 
 export const dynamic = "force-dynamic";
 
+function getPublicPartnerLogo(value: string | null): string | null {
+  if (!value) return null;
+  if (value.startsWith("/") && !value.startsWith("//") && !value.split("/").includes("..")) {
+    return value;
+  }
+
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" ? url.toString() : null;
+  } catch {
+    return null;
+  }
+}
+
+function getPublicPartnerWebsite(value: string | null): string | null {
+  if (!value) return null;
+
+  try {
+    const url = new URL(value);
+    return url.protocol === "http:" || url.protocol === "https:" ? url.toString() : null;
+  } catch {
+    return null;
+  }
+}
+
 export default async function Home() {
   let activitiesUnavailable = false;
   let newsUnavailable = false;
   let projectsUnavailable = false;
   let opportunitiesUnavailable = false;
+  let partnersUnavailable = false;
   const activities = process.env.DATABASE_URL
     ? await db.activity.findMany({
       where: { status: "COMPLETED", public: true, archivedAt: null },
@@ -33,9 +59,11 @@ export default async function Home() {
   let news: HomeNews[] = [];
   let projects: HomeProject[] = [];
   let opportunities: HomeOpportunity[] = [];
+  let partners: HomePartner[] = [];
 
   if (process.env.DATABASE_URL) {
-    const [publishedNews, publishedProjects, publishedOpportunities] = await Promise.all([
+    const now = new Date();
+    const [publishedNews, publishedProjects, publishedOpportunities, confirmedPartners] = await Promise.all([
       db.publication.findMany({
         where: { type: "NEWS", status: "PUBLISHED", archivedAt: null, publishedAt: { not: null } },
         orderBy: { publishedAt: "desc" },
@@ -92,6 +120,23 @@ export default async function Home() {
         console.error("Unable to load published opportunities for the home page:", error);
         return [];
       }),
+      db.partner.findMany({
+        where: {
+          status: "ACTIVE",
+          showOnPublicSite: true,
+          logoPath: { not: null },
+          AND: [
+            { OR: [{ startDate: null }, { startDate: { lte: now } }] },
+            { OR: [{ endDate: null }, { endDate: { gte: now } }] },
+          ],
+        },
+        orderBy: { name: "asc" },
+        select: { id: true, name: true, logoPath: true, website: true },
+      }).catch((error: unknown) => {
+        partnersUnavailable = true;
+        console.error("Unable to load approved public partners for the home page:", error);
+        return [];
+      }),
     ]);
 
     news = publishedNews.flatMap((item) => {
@@ -135,6 +180,16 @@ export default async function Home() {
           : null,
       }];
     });
+    partners = confirmedPartners.flatMap((partner) => {
+      const logoSrc = getPublicPartnerLogo(partner.logoPath);
+      if (!logoSrc) return [];
+      return [{
+        id: partner.id,
+        name: partner.name,
+        logoSrc,
+        website: getPublicPartnerWebsite(partner.website),
+      }];
+    });
   } else {
     const period = getApplicationPeriod(languageTrainingOpportunity.tags);
     opportunities = [{
@@ -164,6 +219,8 @@ export default async function Home() {
       projectsUnavailable={projectsUnavailable}
       opportunities={opportunities}
       opportunitiesUnavailable={opportunitiesUnavailable}
+      partners={partners}
+      partnersUnavailable={partnersUnavailable}
     />
   );
 }

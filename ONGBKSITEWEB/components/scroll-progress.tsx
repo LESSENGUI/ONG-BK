@@ -28,7 +28,7 @@ export function ScrollProgress() {
   }, []);
 
   return (
-    <div aria-hidden="true" className="pointer-events-none fixed inset-x-0 top-0 z-[100] h-1 bg-transparent">
+    <div aria-hidden="true" className="pointer-events-none fixed inset-x-0 top-0 z-[100] h-[3px] bg-transparent">
       <div
         ref={progressBar}
         className="h-full bg-[linear-gradient(90deg,var(--bk-ciel),var(--bk-rose))] shadow-[0_0_25px_rgba(25,167,230,0.45)] transition-transform duration-150 ease-out"

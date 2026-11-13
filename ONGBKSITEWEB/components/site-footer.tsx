@@ -70,7 +70,7 @@ export function SiteFooter() {
       />
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(11,90,155,0.96),rgba(11,90,155,0.82),transparent)]" />
 
-      <div className="relative mx-auto grid max-w-[1320px] gap-10 px-6 py-14 sm:px-10 sm:py-16 lg:gap-8 lg:px-12 xl:grid-cols-[1.35fr_0.8fr_0.9fr_0.9fr_1fr] xl:gap-8 xl:py-[4.5rem]">
+      <div className="relative mx-auto grid max-w-[1320px] grid-cols-1 gap-9 px-4 py-12 sm:grid-cols-2 sm:gap-x-8 sm:gap-y-10 sm:px-8 sm:py-14 lg:px-10 xl:grid-cols-3 2xl:grid-cols-[1.35fr_0.8fr_0.9fr_0.9fr_1fr] 2xl:gap-8 2xl:px-12 2xl:py-[4.5rem]">
         <div className="max-w-[330px]">
           <Link aria-label="ONG-BK — accueil" className="inline-flex items-center gap-3" href="/">
             <span className="relative grid size-[54px] shrink-0 place-items-center overflow-hidden rounded-full border border-white/70 bg-white p-1.5">

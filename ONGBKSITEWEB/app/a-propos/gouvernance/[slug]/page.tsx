@@ -29,19 +29,19 @@ export default async function GovernanceDetailPage({ params }: GovernancePagePro
   if (!organ) notFound();
 
   return (
-    <main className="min-h-screen bg-white">
+    <main className={`${organ.slug === "bureau-executif" ? "executive-board-page " : ""}min-h-screen bg-white`}>
       {organ.slug === "bureau-executif" ? (
-        <section aria-labelledby="executive-hero-title" className="relative isolate overflow-hidden bg-[#071c32] text-white">
+        <section aria-labelledby="executive-hero-title" className="executive-board-hero relative isolate overflow-hidden bg-[#071c32] text-white">
           <div aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(ellipse_at_12%_8%,rgba(25,167,230,0.2),transparent_36%),radial-gradient(ellipse_at_88%_88%,rgba(242,178,51,0.12),transparent_34%)]" />
           <div aria-hidden="true" className="absolute -right-36 -top-48 size-[540px] rounded-full border border-white/[0.07] shadow-[0_0_0_52px_rgba(255,255,255,0.018),0_0_0_108px_rgba(255,255,255,0.014)]" />
           <div className="relative mx-auto grid max-w-[1280px] items-center gap-12 px-5 pb-16 pt-16 sm:px-8 sm:pb-20 sm:pt-20 lg:grid-cols-[1fr_0.82fr] lg:gap-16 lg:px-12 lg:py-24">
-            <div className="max-w-[650px]">
+            <div className="executive-board-hero-copy max-w-[650px]" data-reveal>
               <p className="inline-flex items-center gap-3 text-[10px] font-bold uppercase tracking-[.24em] text-[#f2c46d] sm:text-xs">
                 <span aria-hidden="true" className="h-px w-8 bg-[#f2c46d]" />
                 Gouvernance · ONG-BK
               </p>
               <h1 className="mt-6 font-display text-4xl font-bold leading-[1.08] tracking-[-.055em] text-white sm:text-5xl lg:text-[64px]" id="executive-hero-title">
-                Le Bureau
+                Le Bureau{" "}
                 <span className="block text-[#7dcdf0]">exécutif.</span>
               </h1>
               <p className="mt-6 max-w-[570px] text-base leading-8 text-white/70 sm:text-lg">
@@ -63,16 +63,16 @@ export default async function GovernanceDetailPage({ params }: GovernancePagePro
                 </div>
               </div>
             </div>
-            <div className="relative mx-auto w-full max-w-[520px] lg:justify-self-end">
+            <div className="executive-board-hero-portrait relative mx-auto w-full max-w-[520px] lg:justify-self-end" data-reveal>
               <div aria-hidden="true" className="absolute -inset-4 rounded-[34px] border border-white/10 sm:-inset-5" />
               <div className="relative aspect-[4/4.2] overflow-hidden rounded-[28px] border border-white/15 bg-[#0b3150] shadow-[0_35px_90px_rgba(0,0,0,0.32)]">
                 <Image
-                  alt="Membres de l’ONG-BK réunis lors d’une activité"
-                  className="object-cover"
+                  alt="Portrait du président du Bureau exécutif de l’ONG-BK"
+                  className="executive-board-portrait-image object-cover"
                   fill
                   priority
                   sizes="(max-width: 1024px) 90vw, 42vw"
-                  src="/images/action-communaute.jpg"
+                  src="/images/bureau-executif/president.jpg"
                 />
                 <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[#071c32]/90 via-[#071c32]/10 to-transparent" />
                 <div className="absolute inset-x-0 bottom-0 p-6 sm:p-8">
@@ -104,7 +104,7 @@ export default async function GovernanceDetailPage({ params }: GovernancePagePro
       <section className={organ.slug === "bureau-executif" ? "bg-[var(--bk-fond)] px-5 pb-16 pt-10 sm:px-8 sm:pb-20 sm:pt-14 lg:px-12" : "mx-auto max-w-[1180px] px-5 py-12 sm:px-8 sm:py-16 lg:px-12"} id="governance-detail-content">
         {organ.slug === "bureau-executif" ? (
           <div className="mx-auto max-w-[1280px]">
-            <header className="mb-9 flex flex-col justify-between gap-5 lg:mb-11 lg:flex-row lg:items-end">
+            <header className="executive-board-section-header mb-9 flex flex-col justify-between gap-5 lg:mb-11 lg:flex-row lg:items-end" data-reveal>
               <div className="max-w-2xl">
                 <p className="section-eyebrow">L’équipe dirigeante</p>
                 <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-[-.045em] text-[#071c32] sm:text-4xl">
@@ -114,7 +114,7 @@ export default async function GovernanceDetailPage({ params }: GovernancePagePro
                   Découvrez les membres qui portent les responsabilités et l’action quotidienne de l’ONG-BK.
                 </p>
               </div>
-              <p className="inline-flex w-fit items-center gap-2 rounded-full border border-[rgba(11,90,155,0.12)] bg-white px-4 py-2.5 text-xs font-semibold text-[var(--bk-marine)] shadow-sm">
+              <p className="executive-board-count inline-flex w-fit items-center gap-2 rounded-full border border-[rgba(11,90,155,0.12)] bg-white px-4 py-2.5 text-xs font-semibold text-[var(--bk-marine)] shadow-sm">
                 <span aria-hidden="true" className="size-2 rounded-full bg-[#d9af57]" />
                 Sept membres · mandat de trois ans
               </p>
@@ -122,10 +122,10 @@ export default async function GovernanceDetailPage({ params }: GovernancePagePro
             <div id="membres">
               <ExecutiveBoardProfiles />
             </div>
-            <details className="mt-12 overflow-hidden rounded-[24px] border border-[rgba(11,90,155,0.1)] bg-white shadow-[0_12px_35px_-30px_rgba(11,47,78,0.3)]">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-5 px-5 py-5 font-display text-base font-bold text-[var(--bk-marine)] marker:hidden transition hover:bg-white sm:px-7">
+            <details className="executive-board-responsibilities mt-12 overflow-hidden rounded-[24px] border border-[rgba(11,90,155,0.1)] bg-white shadow-[0_12px_35px_-30px_rgba(11,47,78,0.3)]">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-5 px-5 py-5 font-display text-base font-bold text-[var(--bk-marine)] marker:hidden transition hover:bg-[#f9fbfd] sm:px-7">
                 <span>Le rôle du Bureau exécutif</span>
-                <span aria-hidden="true" className="grid size-9 shrink-0 place-items-center rounded-full bg-[rgba(25,167,230,0.08)] text-[var(--bk-marine)]">+</span>
+                <span aria-hidden="true" className="executive-board-responsibilities-toggle grid size-9 shrink-0 place-items-center rounded-full bg-[rgba(25,167,230,0.08)] text-[var(--bk-marine)]">+</span>
               </summary>
               <div className="grid gap-6 border-t border-ink/10 px-5 py-6 sm:grid-cols-[0.7fr_1.3fr] sm:px-7">
                 <div>
